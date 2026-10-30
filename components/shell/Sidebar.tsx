@@ -18,13 +18,13 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
-  Zap,
+  Compass,
 } from 'lucide-react';
 import { useVisionStore } from '@/store/useVisionStore';
 
 export const NAV_ITEMS = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Welcome', href: '/', icon: Compass },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Inspection Studio', href: '/studio', icon: ScanEye, isPrimary: true },
   { name: 'AI Assistant', href: '/assistant', icon: Bot },
   { name: 'Pinout Guide', href: '/pinouts', icon: Layers },
@@ -40,7 +40,7 @@ export const NAV_ITEMS = [
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
-  const { isSidebarCollapsed, toggleSidebar, aiMode } = useVisionStore();
+  const { isSidebarCollapsed, toggleSidebar } = useVisionStore();
 
   return (
     <aside
@@ -54,7 +54,6 @@ export const Sidebar: React.FC = () => {
           {/* Stylized Chip / Eye Mark */}
           <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-500 p-[1.5px] shrink-0 shadow-cyan-glow group-hover:scale-105 transition-transform duration-200">
             <div className="w-full h-full bg-bg-deepest rounded-[10px] flex items-center justify-center relative overflow-hidden">
-              {/* Chip Pins Graphic */}
               <div className="absolute inset-0 flex items-center justify-center opacity-30">
                 <div className="w-6 h-6 border border-cyan-400/40 rounded-sm" />
               </div>
