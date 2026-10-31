@@ -627,52 +627,54 @@ export const ArduinoUnoSvg: React.FC<ArduinoUnoSvgProps> = ({
                   onClick={() => onSelectDetection?.(d)}
                   className="cursor-pointer transition-all duration-200"
                 >
-                  {/* Bounding box outline - Clean professional teal accent */}
+                  {/* Bounding box outline */}
                   <rect
                     x={x}
                     y={y}
                     width={w}
                     height={h}
                     rx="4"
-                    fill={isSelected ? 'rgba(13, 148, 136, 0.1)' : 'transparent'}
-                    stroke="#0D9488"
-                    strokeWidth={isSelected ? '2.5' : '1.5'}
-                    strokeDasharray={isSelected ? 'none' : '4 2'}
+                    fill={isSelected ? 'rgba(34, 211, 238, 0.15)' : 'transparent'}
+                    stroke={isSelected ? '#22D3EE' : 'rgba(34, 211, 238, 0.45)'}
+                    strokeWidth={isSelected ? '3' : '1.5'}
+                    strokeDasharray={isSelected ? 'none' : '6 3'}
+                    filter={isSelected ? 'url(#glowCyan)' : undefined}
+                    className="hover:stroke-[#22D3EE] hover:stroke-[2.5]"
                   />
 
                   {/* Corner brackets */}
                   <path
-                    d={`M ${x} ${y + 8} V ${y} H ${x + 8}
-                        M ${x + w - 8} ${y} H ${x + w} V ${y + 8}
-                        M ${x + w} ${y + h - 8} V ${y + h} H ${x + w - 8}
-                        M ${x + 8} ${y + h} H ${x} V ${y + h - 8}`}
-                    stroke="#0D9488"
-                    strokeWidth="2"
+                    d={`M ${x} ${y + 10} V ${y} H ${x + 10}
+                        M ${x + w - 10} ${y} H ${x + w} V ${y + 10}
+                        M ${x + w} ${y + h - 10} V ${y + h} H ${x + w - 10}
+                        M ${x + 10} ${y + h} H ${x} V ${y + h - 10}`}
+                    stroke={isSelected ? '#22D3EE' : 'rgba(34, 211, 238, 0.8)'}
+                    strokeWidth="2.5"
                     fill="none"
                   />
 
-                  {/* Designator, Category & Label Tag */}
+                  {/* Designator & Label Tag (only when selected or hovered) */}
                   {isSelected && (
-                    <g transform={`translate(${x}, ${Math.max(16, y - 24)})`}>
+                    <g transform={`translate(${x}, ${Math.max(16, y - 26)})`}>
                       <rect
                         x="0"
                         y="0"
-                        width={Math.max(100, d.label.length * 7 + 45)}
-                        height="20"
+                        width={Math.max(90, d.label.length * 7 + 30)}
+                        height="22"
                         rx="4"
-                        fill="#0F172A"
-                        stroke="#0D9488"
-                        strokeWidth="1"
+                        fill="#0A1428"
+                        stroke="#22D3EE"
+                        strokeWidth="1.5"
                       />
                       <text
                         x="6"
-                        y="14"
+                        y="15"
                         fontFamily="JetBrains Mono, monospace"
-                        fontSize="10"
-                        fontWeight="500"
-                        fill="#FFFFFF"
+                        fontSize="11"
+                        fontWeight="bold"
+                        fill="#22D3EE"
                       >
-                        {d.designator || 'NODE'} [{d.category.toUpperCase()}]: {d.label.slice(0, 20)}
+                        {d.designator || 'NODE'}: {d.label.slice(0, 20)}
                       </text>
                     </g>
                   )}
@@ -695,25 +697,26 @@ export const ArduinoUnoSvg: React.FC<ArduinoUnoSvgProps> = ({
                     onClick={() => onSelectDefect?.(defect)}
                     className="cursor-pointer transition-all duration-200"
                   >
-                    {/* Clean Defect Boundary */}
+                    {/* Pulsing Defect Boundary */}
                     <rect
                       x={x}
                       y={y}
                       width={w}
                       height={h}
-                      rx="4"
-                      fill={isSelected ? 'rgba(220, 38, 38, 0.15)' : 'rgba(220, 38, 38, 0.08)'}
-                      stroke="#DC2626"
-                      strokeWidth={isSelected ? '2.5' : '1.5'}
+                      rx="6"
+                      fill={isSelected ? 'rgba(239, 68, 68, 0.25)' : 'rgba(239, 68, 68, 0.12)'}
+                      stroke="#EF4444"
+                      strokeWidth={isSelected ? '3' : '2'}
                       strokeDasharray="4 2"
+                      filter="url(#glowRed)"
                     />
 
                     {/* Defect Pill Indicator */}
-                    <g transform={`translate(${x + w / 2 - 35}, ${Math.max(14, y - 18)})`}>
-                      <rect x="0" y="0" width="70" height="18" rx="4" fill="#DC2626" />
+                    <g transform={`translate(${x + w / 2 - 40}, ${y - 20})`}>
+                      <rect x="0" y="0" width="80" height="20" rx="10" fill="#EF4444" />
                       <text
-                        x="35"
-                        y="13"
+                        x="40"
+                        y="14"
                         textAnchor="middle"
                         fontFamily="JetBrains Mono, monospace"
                         fontSize="10"

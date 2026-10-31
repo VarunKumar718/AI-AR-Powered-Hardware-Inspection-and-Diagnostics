@@ -2,21 +2,26 @@
 
 import React, { useRef, useState } from 'react';
 import {
-  Upload,
+  UploadCloud,
   Camera,
   Cpu,
   Sliders,
+  CheckSquare,
+  Sparkles,
+  Zap,
   Play,
   RotateCcw,
+  Layers,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
   Info,
   CameraOff,
   Video,
   Pause,
   AlertCircle,
-  Layers,
+  Clock,
+  HardDrive,
+  Maximize2,
 } from 'lucide-react';
 import { useVisionStore, InputSourceType, DetectionMode, OverlayToggles } from '@/store/useVisionStore';
 import { ProvenanceBadge } from '@/components/shell/ProvenanceBadge';
@@ -71,7 +76,6 @@ export const StudioLeftPanel: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const [isOverlaysOpen, setIsOverlaysOpen] = useState(false);
 
   // Handle Drag & Drop for Image Upload
   const handleDrag = (e: React.DragEvent) => {
@@ -93,11 +97,11 @@ export const StudioLeftPanel: React.FC = () => {
       });
       return;
     }
-    if (file.size > 20 * 1024 * 1024) {
+    if (file.size > 15 * 1024 * 1024) {
       addToast({
         type: 'error',
         title: 'File Too Large',
-        message: 'Maximum image size is 20 MB.',
+        message: 'Maximum image size is 15 MB.',
       });
       return;
     }
@@ -153,6 +157,7 @@ export const StudioLeftPanel: React.FC = () => {
         message: 'Live hardware video feed active.',
       });
     } catch (err: any) {
+      console.warn('[VisionGuard Camera Error]', err);
       const msg = err.name === 'NotAllowedError'
         ? 'Camera permission denied. Falling back to Sample Board.'
         : 'No webcam hardware detected. Falling back to Sample Board.';
@@ -168,40 +173,45 @@ export const StudioLeftPanel: React.FC = () => {
 
   const toggleFreezeFrame = () => {
     setCameraFrozen(!cameraFrozen);
+    addToast({
+      type: 'info',
+      title: cameraFrozen ? 'Camera Resumed' : 'Frame Frozen',
+      message: cameraFrozen ? 'Live video streaming resumed.' : 'Captured freeze-frame for inspection.',
+    });
   };
 
   if (isLeftPanelCollapsed) {
     return (
-      <div className="w-10 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center py-3 shrink-0 z-20">
+      <div className="w-12 bg-bg-card border-r border-border-subtle flex flex-col items-center py-4 shrink-0 z-20">
         <button
           onClick={toggleLeftPanel}
-          className="p-1.5 rounded-md text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="p-2 rounded-lg bg-bg-elevated text-brand-cyan hover:bg-cyan-500/20 transition-colors"
           title="Expand Controls Panel"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-5 h-5" />
         </button>
-        <span className="[writing-mode:vertical-rl] text-xs font-medium text-slate-400 mt-6 uppercase rotate-180">
-          Controls
+        <span className="[writing-mode:vertical-rl] text-xs font-mono tracking-widest text-text-muted mt-8 uppercase rotate-180">
+          Inspection Controls
         </span>
       </div>
     );
   }
 
   return (
-    <aside className="w-full lg:w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 h-full overflow-y-auto scrollbar-thin z-20 select-none">
+    <aside className="w-full lg:w-80 bg-bg-card/95 border-r border-border-subtle flex flex-col shrink-0 h-full overflow-y-auto scrollbar-thin z-20 select-none">
       {/* Panel Header */}
-      <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+      <div className="p-4 border-b border-border-subtle flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-          <h2 className="text-xs font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+          <Sliders className="w-4 h-4 text-brand-cyan" />
+          <h2 className="text-sm font-display font-bold text-text-primary tracking-wide">
             Input & Controls
           </h2>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <ProvenanceBadge source="simulated" />
           <button
             onClick={toggleLeftPanel}
-            className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            className="p-1 rounded text-text-muted hover:text-text-primary"
             title="Collapse Panel"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -209,19 +219,19 @@ export const StudioLeftPanel: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-3.5 space-y-4">
+      <div className="p-4 space-y-5">
         {/* 1. SOURCE SELECTOR TABS */}
-        <div className="space-y-1.5">
-          <label className="text-[11px] font-medium uppercase text-slate-500 tracking-wider">
+        <div className="space-y-2">
+          <label className="text-[11px] font-mono uppercase text-text-muted font-semibold tracking-wider">
             Hardware Source Feed
           </label>
-          <div className="grid grid-cols-3 gap-1 p-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs">
+          <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-bg-base border border-border-subtle text-xs font-mono">
             <button
               onClick={() => setSourceType('sample')}
-              className={`py-1.5 px-2 rounded transition-colors flex items-center justify-center gap-1.5 text-xs font-medium ${
+              className={`py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 sourceType === 'sample'
-                  ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-sm'
+                  : 'text-text-muted hover:text-text-primary'
               }`}
             >
               <Cpu className="w-3.5 h-3.5" />
@@ -229,13 +239,13 @@ export const StudioLeftPanel: React.FC = () => {
             </button>
             <button
               onClick={() => setSourceType('upload')}
-              className={`py-1.5 px-2 rounded transition-colors flex items-center justify-center gap-1.5 text-xs font-medium ${
+              className={`py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 sourceType === 'upload'
-                  ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-sm'
+                  : 'text-text-muted hover:text-text-primary'
               }`}
             >
-              <Upload className="w-3.5 h-3.5" />
+              <UploadCloud className="w-3.5 h-3.5" />
               <span>Upload</span>
             </button>
             <button
@@ -243,10 +253,10 @@ export const StudioLeftPanel: React.FC = () => {
                 setSourceType('camera');
                 if (!isCameraActive) startCamera();
               }}
-              className={`py-1.5 px-2 rounded transition-colors flex items-center justify-center gap-1.5 text-xs font-medium ${
+              className={`py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 sourceType === 'camera'
-                  ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-sm'
+                  : 'text-text-muted hover:text-text-primary'
               }`}
             >
               <Camera className="w-3.5 h-3.5" />
@@ -257,25 +267,25 @@ export const StudioLeftPanel: React.FC = () => {
 
         {/* Source Sub-Panels */}
         {sourceType === 'sample' && (
-          <div className="space-y-1.5">
-            <div className="text-[11px] text-slate-500 flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-bg-base/70 border border-border-subtle space-y-2">
+            <div className="text-[11px] font-mono text-text-muted flex items-center justify-between">
               <span>Select Sample Board:</span>
-              <span className="font-mono text-slate-400">{boards.length} Available</span>
+              <span className="text-brand-cyan">{boards.length} Available</span>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {boards.map((b) => (
                 <button
                   key={b.id}
                   onClick={() => setActiveBoard(b.id)}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between border ${
+                  className={`w-full text-left px-2.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center justify-between border ${
                     b.id === activeBoardId
-                      ? 'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border-teal-600 dark:border-teal-500 font-medium'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow-cyan-glow'
+                      : 'hover:bg-bg-elevated text-text-secondary border-transparent'
                   }`}
                 >
                   <span className="truncate">{b.name}</span>
                   {b.variant === 'defect_demo' && (
-                    <span className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200 px-1 py-0.2 rounded font-medium ml-1 shrink-0">
+                    <span className="text-[10px] text-rose-400 font-bold px-1.5 py-0.2 rounded bg-rose-950/60 border border-rose-500/30">
                       5 Defects
                     </span>
                   )}
@@ -298,50 +308,56 @@ export const StudioLeftPanel: React.FC = () => {
                 }
               }}
             />
-            {/* Minimal Drop Zone as requested: large dashed gray border, turns teal on drag */}
             <div
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`p-6 rounded-lg border-2 border-dashed cursor-pointer transition-colors flex flex-col items-center justify-center text-center gap-2 ${
+              className={`p-5 rounded-2xl border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center text-center gap-2 ${
                 dragActive
-                  ? 'border-teal-600 bg-teal-50/50 dark:bg-teal-950/20'
-                  : 'border-slate-300 dark:border-slate-700 hover:border-teal-600 dark:hover:border-teal-500 bg-white dark:bg-slate-850'
+                  ? 'border-cyan-400 bg-cyan-500/10 scale-[1.02]'
+                  : 'border-border-strong hover:border-cyan-400/50 bg-bg-base/60'
               }`}
             >
-              <Upload className={`w-6 h-6 ${dragActive ? 'text-teal-600' : 'text-slate-400'}`} />
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-brand-cyan">
+                <UploadCloud className="w-5 h-5 animate-pulse-subtle" />
+              </div>
               <div className="space-y-0.5">
-                <div className="text-xs font-medium text-slate-800 dark:text-slate-200">
-                  Drop a photo of your board here
+                <div className="text-xs font-bold text-text-primary">
+                  Click or drag PCB photo
                 </div>
-                <div className="text-[11px] text-slate-400">
-                  or click to browse from your device
+                <div className="text-[10px] text-text-muted">
+                  PNG, JPG, WEBP (Max 15MB)
                 </div>
               </div>
             </div>
 
             {uploadedImageMeta && (
-              <div className="p-2 rounded-md bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+              <div className="p-2.5 rounded-xl bg-bg-elevated/70 border border-border-subtle text-[11px] font-mono text-text-secondary flex items-center justify-between">
                 <span className="truncate max-w-[140px]">{uploadedImageMeta.name}</span>
-                <span className="font-mono text-[11px] text-slate-400">{uploadedImageMeta.resolution}</span>
+                <span className="text-brand-cyan">{uploadedImageMeta.resolution}</span>
               </div>
             )}
+
+            <div className="text-[10px] text-text-muted flex items-center gap-1.5">
+              <Info className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+              <span>Images are processed 100% locally in your browser memory.</span>
+            </div>
           </div>
         )}
 
         {sourceType === 'camera' && (
-          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2.5">
+          <div className="p-3.5 rounded-xl bg-bg-base/70 border border-border-subtle space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600 dark:text-slate-400">Status:</span>
-              <span className={`font-medium ${isCameraActive ? 'text-emerald-600' : 'text-slate-500'}`}>
-                {isCameraActive ? (cameraFrozen ? 'Paused' : 'Streaming') : 'Inactive'}
+              <span className="font-mono text-text-secondary">Camera Status:</span>
+              <span className={`font-mono font-bold ${isCameraActive ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {isCameraActive ? (cameraFrozen ? 'FROZEN' : 'STREAMING') : 'INACTIVE'}
               </span>
             </div>
 
             {cameraError && (
-              <div className="p-2 rounded bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-1.5">
+              <div className="p-2 rounded-lg bg-rose-950/40 border border-rose-500/30 text-[11px] text-rose-300 flex items-start gap-1.5">
                 <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>{cameraError}</span>
               </div>
@@ -351,7 +367,7 @@ export const StudioLeftPanel: React.FC = () => {
               {!isCameraActive ? (
                 <button
                   onClick={startCamera}
-                  className="w-full h-9 rounded-md bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-bg-deepest font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Video className="w-4 h-4" />
                   <span>Start Camera</span>
@@ -360,9 +376,9 @@ export const StudioLeftPanel: React.FC = () => {
                 <>
                   <button
                     onClick={toggleFreezeFrame}
-                    className="flex-1 h-9 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1.5 transition-colors"
+                    className="flex-1 py-2 rounded-xl bg-bg-elevated hover:bg-bg-card border border-border-subtle text-xs font-mono text-text-primary flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    {cameraFrozen ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+                    {cameraFrozen ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
                     <span>{cameraFrozen ? 'Resume' : 'Freeze'}</span>
                   </button>
                   <button
@@ -371,7 +387,7 @@ export const StudioLeftPanel: React.FC = () => {
                       setIsCameraActive(false);
                       setSourceType('sample');
                     }}
-                    className="h-9 px-2.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-rose-50 hover:text-rose-600 text-slate-500 transition-colors"
+                    className="p-2 rounded-xl bg-bg-elevated hover:bg-rose-950/40 border border-border-subtle text-text-muted hover:text-rose-400"
                     title="Stop Camera"
                   >
                     <CameraOff className="w-4 h-4" />
@@ -382,37 +398,40 @@ export const StudioLeftPanel: React.FC = () => {
           </div>
         )}
 
-        {/* 2. PRIMARY SOLID TEAL ACTION BUTTON */}
+        {/* 2. PRIMARY GLOWING ANALYZE BUTTON */}
         <div className="space-y-2 pt-1">
           <button
             onClick={runAnalysis}
             disabled={isAnalyzing}
-            className={`w-full h-10 px-4 rounded-md font-medium text-xs tracking-wide uppercase flex items-center justify-center gap-2 transition-colors ${
+            className={`w-full py-3.5 px-4 rounded-2xl font-display font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg ${
               isAnalyzing
-                ? 'bg-teal-700 text-white/80 cursor-wait'
-                : 'bg-teal-600 hover:bg-teal-700 text-white cursor-pointer'
+                ? 'bg-cyan-950/80 border border-cyan-400/50 text-cyan-300 cursor-wait'
+                : 'bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-300 text-bg-deepest hover:scale-[1.02] active:scale-95 shadow-cyan-glow cursor-pointer'
             }`}
           >
             {isAnalyzing ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-cyan-300 border-t-transparent rounded-full animate-spin" />
                 <span>Scanning Feed...</span>
               </>
             ) : (
-              <span>Run Vision Inspection</span>
+              <>
+                <Zap className="w-4 h-4 fill-current" />
+                <span>Run Vision Inspection</span>
+              </>
             )}
           </button>
 
-          {/* Thin, Simple Progress Bar as requested */}
+          {/* Staged Analysis Progress */}
           {isAnalyzing && (
-            <div className="space-y-1 pt-1">
-              <div className="flex justify-between text-[11px] text-slate-500">
-                <span>{analysisStep}</span>
-                <span className="font-mono">{analysisProgress}%</span>
+            <div className="space-y-1.5 pt-1 animate-in fade-in duration-150">
+              <div className="flex justify-between text-[11px] font-mono">
+                <span className="text-brand-cyan">{analysisStep}</span>
+                <span className="text-text-muted">{analysisProgress}%</span>
               </div>
-              <div className="w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-bg-base rounded-full overflow-hidden border border-border-subtle">
                 <div
-                  className="h-full bg-teal-600 transition-all duration-150"
+                  className="h-full bg-gradient-to-r from-cyan-400 to-teal-400 transition-all duration-200"
                   style={{ width: `${analysisProgress}%` }}
                 />
               </div>
@@ -420,21 +439,21 @@ export const StudioLeftPanel: React.FC = () => {
           )}
         </div>
 
-        {/* 3. DETECTION MODE */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-500 uppercase font-medium">Detection Mode</span>
-            <span className="text-teal-700 dark:text-teal-300 font-medium capitalize">{detectionMode}</span>
+        {/* 3. DETECTION MODE (Fast / Balanced / Precise) */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-[11px] font-mono">
+            <span className="text-text-muted font-semibold uppercase">Detection Mode</span>
+            <span className="text-brand-cyan font-bold capitalize">{detectionMode}</span>
           </div>
-          <div className="grid grid-cols-3 gap-1 p-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs">
+          <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-bg-base border border-border-subtle text-xs font-mono">
             {(['fast', 'balanced', 'precise'] as DetectionMode[]).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setDetectionMode(mode)}
-                className={`py-1 rounded capitalize transition-colors text-xs ${
+                className={`py-1 rounded-lg capitalize transition-colors ${
                   detectionMode === mode
-                    ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 font-medium shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                    ? 'bg-bg-elevated text-cyan-300 font-bold border border-cyan-500/30'
+                    : 'text-text-muted hover:text-text-primary'
                 }`}
               >
                 {mode}
@@ -444,10 +463,10 @@ export const StudioLeftPanel: React.FC = () => {
         </div>
 
         {/* 4. CONFIDENCE THRESHOLD SLIDER */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-500 uppercase font-medium text-[11px]">Confidence Cutoff</span>
-            <span className="font-mono text-slate-800 dark:text-slate-200 font-medium">{(minConfidence * 100).toFixed(0)}%</span>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-mono">
+            <span className="text-text-muted font-semibold uppercase">Confidence Cutoff</span>
+            <span className="text-emerald-400 font-bold">{(minConfidence * 100).toFixed(0)}%</span>
           </div>
           <input
             type="range"
@@ -456,16 +475,16 @@ export const StudioLeftPanel: React.FC = () => {
             step="0.05"
             value={minConfidence}
             onChange={(e) => setMinConfidence(parseFloat(e.target.value))}
-            className="w-full accent-teal-600 h-1 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
+            className="w-full accent-cyan-400 h-1.5 bg-bg-base rounded-lg cursor-pointer"
           />
         </div>
 
-        {/* 5. CATEGORY FILTER CHIPS: simple gray chips with selected one in teal */}
-        <div className="space-y-1.5">
-          <label className="text-[11px] uppercase font-medium text-slate-500">
+        {/* 5. CATEGORY FILTER CHIPS */}
+        <div className="space-y-2">
+          <label className="text-[11px] font-mono uppercase text-text-muted font-semibold">
             Category Filter
           </label>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1.5">
             {CATEGORIES.map((cat) => {
               const isSelected = categoryFilter === cat.id;
               const count =
@@ -477,65 +496,73 @@ export const StudioLeftPanel: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => setCategoryFilter(cat.id)}
-                  className={`px-2 py-1 rounded text-xs transition-colors flex items-center gap-1 border ${
+                  className={`px-2 py-1 rounded-lg text-[11px] font-mono transition-all flex items-center gap-1 border ${
                     isSelected
-                      ? 'bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border-teal-600 dark:border-teal-500 font-medium'
-                      : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 font-bold'
+                      : 'bg-bg-base/70 text-text-secondary border-border-subtle hover:text-text-primary'
                   }`}
                 >
                   <span>{cat.label}</span>
-                  <span className="text-[10px] text-slate-400">({count})</span>
+                  <span className="text-[10px] opacity-70">({count})</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* 6. OVERLAY TOGGLES: Collapsible section as requested */}
-        <div className="border-t border-slate-200 dark:border-slate-800 pt-2.5">
-          <button
-            onClick={() => setIsOverlaysOpen(!isOverlaysOpen)}
-            className="w-full flex items-center justify-between text-[11px] uppercase font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 py-1"
-          >
-            <div className="flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-slate-400" />
-              <span>Overlay Layer Toggles</span>
-            </div>
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOverlaysOpen ? 'rotate-180' : ''}`} />
-          </button>
+        {/* 6. OVERLAY TOGGLES */}
+        <div className="space-y-2 pt-1 border-t border-border-subtle">
+          <label className="text-[11px] font-mono uppercase text-text-muted font-semibold">
+            Overlay Layer Toggles
+          </label>
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+            {[
+              { key: 'boxes' as keyof OverlayToggles, label: 'Bounding Boxes' },
+              { key: 'labels' as keyof OverlayToggles, label: 'Component Tags' },
+              { key: 'confidence' as keyof OverlayToggles, label: 'Confidence %' },
+              { key: 'pinouts' as keyof OverlayToggles, label: 'Pinout Markers' },
+              { key: 'connections' as keyof OverlayToggles, label: 'Signal Traces' },
+              { key: 'defects' as keyof OverlayToggles, label: 'Defect Marks' },
+              { key: 'heatmap' as keyof OverlayToggles, label: 'Thermal Heatmap' },
+              { key: 'arGuidance' as keyof OverlayToggles, label: 'AR HUD Guide' },
+            ].map((item) => {
+              const active = overlayToggles[item.key];
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setOverlayToggle(item.key)}
+                  className={`p-2 rounded-xl text-left transition-all border flex items-center justify-between ${
+                    active
+                      ? 'bg-cyan-500/15 border-cyan-500/40 text-cyan-300'
+                      : 'bg-bg-base/60 border-border-subtle text-text-muted hover:text-text-primary'
+                  }`}
+                >
+                  <span className="text-[11px] truncate">{item.label}</span>
+                  <span
+                    className={`w-2 h-2 rounded-full ${active ? 'bg-cyan-400' : 'bg-slate-600'}`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-          {isOverlaysOpen && (
-            <div className="grid grid-cols-2 gap-1.5 pt-2 text-xs">
-              {[
-                { key: 'boxes' as keyof OverlayToggles, label: 'Bounding Boxes' },
-                { key: 'labels' as keyof OverlayToggles, label: 'Component Tags' },
-                { key: 'confidence' as keyof OverlayToggles, label: 'Confidence %' },
-                { key: 'pinouts' as keyof OverlayToggles, label: 'Pinout Markers' },
-                { key: 'connections' as keyof OverlayToggles, label: 'Signal Traces' },
-                { key: 'defects' as keyof OverlayToggles, label: 'Defect Marks' },
-                { key: 'heatmap' as keyof OverlayToggles, label: 'Thermal Heatmap' },
-                { key: 'arGuidance' as keyof OverlayToggles, label: 'AR HUD Guide' },
-              ].map((item) => {
-                const active = overlayToggles[item.key];
-                return (
-                  <button
-                    key={item.key}
-                    onClick={() => setOverlayToggle(item.key)}
-                    className={`p-1.5 rounded text-left transition-colors border flex items-center justify-between ${
-                      active
-                        ? 'bg-teal-50 dark:bg-teal-950/40 border-teal-300 dark:border-teal-800 text-teal-800 dark:text-teal-200'
-                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    <span className="text-[11px] truncate">{item.label}</span>
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-600'}`}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          )}
+        {/* 7. SESSION INFO CARD */}
+        <div className="p-3 rounded-xl bg-bg-base/80 border border-border-subtle space-y-1.5 text-[11px] font-mono text-text-muted">
+          <div className="flex justify-between items-center">
+            <span>Inference Time:</span>
+            <span className="text-emerald-400 font-bold">{lastInferenceMs} ms</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span>Active Board:</span>
+            <span className="text-text-secondary truncate max-w-[130px]">{activeBoard.name.split(' (')[0]}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span>Defects Found:</span>
+            <span className={activeBoard.defects.length > 0 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
+              {activeBoard.defects.length} items
+            </span>
+          </div>
         </div>
       </div>
     </aside>

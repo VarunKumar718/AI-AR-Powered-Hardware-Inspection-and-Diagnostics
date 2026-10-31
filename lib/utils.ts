@@ -22,25 +22,25 @@ export function getHealthScoreColor(score: number): {
 } {
   if (score >= 90) {
     return {
-      text: 'text-emerald-700 dark:text-emerald-400',
-      bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-      border: 'border-emerald-200 dark:border-emerald-800',
-      ring: 'ring-emerald-500/20',
+      text: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/30',
+      ring: 'ring-emerald-500/40',
     };
   }
   if (score >= 70) {
     return {
-      text: 'text-amber-700 dark:text-amber-400',
-      bg: 'bg-amber-50 dark:bg-amber-950/40',
-      border: 'border-amber-200 dark:border-amber-800',
-      ring: 'ring-amber-500/20',
+      text: 'text-amber-400',
+      bg: 'bg-amber-500/10',
+      border: 'border-amber-500/30',
+      ring: 'ring-amber-500/40',
     };
   }
   return {
-    text: 'text-rose-700 dark:text-rose-400',
-    bg: 'bg-rose-50 dark:bg-rose-950/40',
-    border: 'border-rose-200 dark:border-rose-800',
-    ring: 'ring-rose-500/20',
+    text: 'text-rose-400',
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/30',
+    ring: 'ring-rose-500/40',
   };
 }
 
@@ -54,37 +54,37 @@ export function getSeverityBadge(severity: DefectSeverity): {
     case 'critical':
       return {
         label: 'CRITICAL',
-        bg: 'bg-rose-50 dark:bg-rose-950/40',
-        text: 'text-rose-700 dark:text-rose-400',
-        border: 'border-rose-200 dark:border-rose-800',
+        bg: 'bg-red-500/20',
+        text: 'text-red-400',
+        border: 'border-red-500/40',
       };
     case 'high':
       return {
         label: 'HIGH',
-        bg: 'bg-orange-50 dark:bg-orange-950/40',
-        text: 'text-orange-700 dark:text-orange-400',
-        border: 'border-orange-200 dark:border-orange-800',
+        bg: 'bg-orange-500/20',
+        text: 'text-orange-400',
+        border: 'border-orange-500/40',
       };
     case 'medium':
       return {
         label: 'MEDIUM',
-        bg: 'bg-amber-50 dark:bg-amber-950/40',
-        text: 'text-amber-700 dark:text-amber-400',
-        border: 'border-amber-200 dark:border-amber-800',
+        bg: 'bg-amber-500/20',
+        text: 'text-amber-400',
+        border: 'border-amber-500/40',
       };
     case 'low':
       return {
         label: 'LOW',
-        bg: 'bg-slate-100 dark:bg-slate-800',
-        text: 'text-slate-700 dark:text-slate-300',
-        border: 'border-slate-200 dark:border-slate-700',
+        bg: 'bg-cyan-500/20',
+        text: 'text-cyan-400',
+        border: 'border-cyan-500/40',
       };
     default:
       return {
         label: 'INFO',
-        bg: 'bg-slate-100 dark:bg-slate-800',
-        text: 'text-slate-600 dark:text-slate-400',
-        border: 'border-slate-200 dark:border-slate-700',
+        bg: 'bg-slate-500/20',
+        text: 'text-slate-400',
+        border: 'border-slate-500/40',
       };
   }
 }
@@ -93,22 +93,26 @@ export function getCategoryBadge(category: string): {
   label: string;
   color: string;
 } {
-  const labelMap: Record<string, string> = {
-    microcontroller: 'MCU',
-    ic: 'IC',
-    passive: 'PASSIVE',
-    connector: 'CONNECTOR',
-    power: 'POWER',
-    header: 'HEADER',
-    crystal: 'CRYSTAL',
-    led: 'LED',
-  };
-
-  const label = labelMap[category] || 'OTHER';
-  return {
-    label,
-    color: 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700',
-  };
+  switch (category) {
+    case 'microcontroller':
+      return { label: 'MCU', color: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' };
+    case 'ic':
+      return { label: 'IC', color: 'text-indigo-400 bg-indigo-950/60 border-indigo-500/30' };
+    case 'passive':
+      return { label: 'PASSIVE', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-500/30' };
+    case 'connector':
+      return { label: 'CONNECTOR', color: 'text-amber-400 bg-amber-950/60 border-amber-500/30' };
+    case 'power':
+      return { label: 'POWER', color: 'text-orange-400 bg-orange-950/60 border-orange-500/30' };
+    case 'header':
+      return { label: 'HEADER', color: 'text-teal-400 bg-teal-950/60 border-teal-500/30' };
+    case 'crystal':
+      return { label: 'CRYSTAL', color: 'text-purple-400 bg-purple-950/60 border-purple-500/30' };
+    case 'led':
+      return { label: 'LED', color: 'text-pink-400 bg-pink-950/60 border-pink-500/30' };
+    default:
+      return { label: 'OTHER', color: 'text-slate-400 bg-slate-900/60 border-slate-700' };
+  }
 }
 
 export function toSvgCoordinates(

@@ -2,7 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import {
+  Sparkles,
+  ArrowRight,
+  Shield,
+  Layers,
+  Cpu,
+  ScanEye,
+  Activity,
+  Terminal,
+} from 'lucide-react';
 import { useVisionStore } from '@/store/useVisionStore';
 
 interface RoutePlaceholderProps {
@@ -31,28 +40,31 @@ export const RoutePlaceholder: React.FC<RoutePlaceholderProps> = ({
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Hero Banner Card */}
-      <div className="rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-bg-card via-bg-elevated to-bg-card border border-border-strong p-6 md:p-8 shadow-card-glass">
+        {/* Subtle ambient cyan glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-2.5 py-0.5 rounded-md">
+              <span className="text-[10px] font-mono uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-semibold">
                 {badge}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-mono text-text-muted">
                 Active Target: {activeBoard.name}
               </span>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400 shrink-0">
-                <Icon className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-brand-cyan shrink-0">
+                <Icon className="w-6 h-6" />
               </div>
-              <h1 className="text-xl md:text-2xl font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-display font-bold text-text-primary tracking-tight">
                 {title}
               </h1>
             </div>
 
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-sm text-text-secondary leading-relaxed">
               {description}
             </p>
           </div>
@@ -60,7 +72,7 @@ export const RoutePlaceholder: React.FC<RoutePlaceholderProps> = ({
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <Link
               href={actionHref}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs transition-colors shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-bg-deepest font-semibold text-xs transition-all shadow-cyan-glow hover:scale-105 active:scale-95"
             >
               <span>{actionText}</span>
               <ArrowRight className="w-4 h-4" />
@@ -75,15 +87,15 @@ export const RoutePlaceholder: React.FC<RoutePlaceholderProps> = ({
           {stats.map((s, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col gap-1 shadow-sm"
+              className="p-4 rounded-xl bg-bg-card border border-border-subtle flex flex-col gap-1"
             >
-              <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
+              <span className="text-[11px] font-mono text-text-muted uppercase tracking-wider">
                 {s.label}
               </span>
-              <span className="text-xl md:text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+              <span className="text-xl md:text-2xl font-mono font-bold text-text-primary tabular-nums">
                 {s.value}
               </span>
-              <span className="text-[11px] text-teal-600 dark:text-teal-400 font-medium">{s.detail}</span>
+              <span className="text-[11px] text-brand-cyan">{s.detail}</span>
             </div>
           ))}
         </div>
@@ -94,23 +106,23 @@ export const RoutePlaceholder: React.FC<RoutePlaceholderProps> = ({
         {features.map((feat, idx) => (
           <div
             key={idx}
-            className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex flex-col justify-between gap-3 shadow-sm"
+            className="p-5 rounded-xl bg-bg-card/70 border border-border-subtle hover:border-cyan-500/30 transition-all flex flex-col justify-between gap-3 group"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-teal-600 dark:text-teal-400 font-semibold">
+                <span className="text-xs font-mono text-brand-cyan font-semibold">
                   0{idx + 1}
                 </span>
                 {feat.tag && (
-                  <span className="text-[10px] uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                  <span className="text-[10px] font-mono uppercase bg-bg-elevated px-2 py-0.5 rounded text-text-muted border border-border-subtle">
                     {feat.tag}
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100">
+              <h3 className="text-sm font-semibold text-text-primary group-hover:text-cyan-300 transition-colors">
                 {feat.title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-text-secondary leading-relaxed">
                 {feat.desc}
               </p>
             </div>
