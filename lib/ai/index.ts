@@ -8,18 +8,29 @@ import {
   SimulatedDefectAnalyzer,
   SimulatedAssistant,
 } from './simulated';
+import {
+  BackendDetectorAdapter,
+  BackendDefectAdapter,
+  BackendAssistantAdapter,
+} from './backend-adapter';
 
 export * from './types';
 export * from './mapping';
 export * from './simulated';
+export * from './backend-adapter';
 export * from './onnx-adapter.stub';
 export * from './transformers-adapter.stub';
 export * from './llm-route-stub';
 
 class AiAdapterRegistry {
-  private detector: DetectorAdapter = new SimulatedDetector();
-  private defectAnalyzer: DefectAdapter = new SimulatedDefectAnalyzer();
-  private assistant: AssistantAdapter = new SimulatedAssistant();
+  private simulatedDetector: DetectorAdapter = new SimulatedDetector();
+  private simulatedDefectAnalyzer: DefectAdapter = new SimulatedDefectAnalyzer();
+  private simulatedAssistant: AssistantAdapter = new SimulatedAssistant();
+
+  private backendDetector: DetectorAdapter = new BackendDetectorAdapter();
+  private backendDefectAnalyzer: DefectAdapter = new BackendDefectAdapter();
+  private backendAssistant: AssistantAdapter = new BackendAssistantAdapter();
+
   private mode: 'simulated' | 'model' = 'simulated';
 
   getMode(): 'simulated' | 'model' {
@@ -31,27 +42,39 @@ class AiAdapterRegistry {
   }
 
   getDetector(): DetectorAdapter {
-    return this.detector;
+    return this.mode === 'model' ? this.backendDetector : this.simulatedDetector;
   }
 
   getDefectAnalyzer(): DefectAdapter {
-    return this.defectAnalyzer;
+    return this.mode === 'model' ? this.backendDefectAnalyzer : this.simulatedDefectAnalyzer;
   }
 
   getAssistant(): AssistantAdapter {
-    return this.assistant;
+    return this.mode === 'model' ? this.backendAssistant : this.simulatedAssistant;
   }
 
   registerDetector(detector: DetectorAdapter) {
-    this.detector = detector;
+    if (this.mode === 'model') {
+      this.backendDetector = detector;
+    } else {
+      this.simulatedDetector = detector;
+    }
   }
 
   registerDefectAnalyzer(analyzer: DefectAdapter) {
-    this.defectAnalyzer = analyzer;
+    if (this.mode === 'model') {
+      this.backendDefectAnalyzer = analyzer;
+    } else {
+      this.simulatedDefectAnalyzer = analyzer;
+    }
   }
 
   registerAssistant(assistant: AssistantAdapter) {
-    this.assistant = assistant;
+    if (this.mode === 'model') {
+      this.backendAssistant = assistant;
+    } else {
+      this.simulatedAssistant = assistant;
+    }
   }
 }
 

@@ -1,0 +1,341 @@
+{
+  "components": [
+    {
+      "id": "atmega328p",
+      "name": "ATmega328P 8-Bit AVR Microcontroller",
+      "category": "microcontroller",
+      "mpn": "ATMEGA328P-PU",
+      "package": "28-Pin Narrow DIP (0.3\")",
+      "description": "High-performance, low-power Microchip 8-bit AVR RISC-based microcontroller combining 32 KB ISP flash memory with read-while-write capabilities, 1 KB EEPROM, 2 KB SRAM, 23 general-purpose I/O lines, 32 general-purpose working registers, and 3 flexible timer/counters.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "atmega16u2",
+      "name": "ATmega16U2 USB-to-UART Bridge Controller",
+      "category": "ic",
+      "mpn": "ATMEGA16U2-MU",
+      "package": "32-Lead QFN / MLF (5x5mm)",
+      "description": "Dedicated AVR microcontroller featuring full-speed USB 2.0 device hardware and pre-programmed USB-to-Serial CDC firmware, bridging USB packets from host PC to ATmega328P hardware UART.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "ncp1117-50",
+      "name": "NCP1117 5.0V Low-Dropout Linear Voltage Regulator",
+      "category": "power",
+      "mpn": "NCP1117ST50T3G",
+      "package": "SOT-223 (Tab connected to Vout)",
+      "description": "Positive low-dropout linear regulator providing up to 1.0A output current. Regulates external DC barrel jack power (7V-12V) down to clean 5.0V for MCU and peripherals.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "lp2985-33",
+      "name": "LP2985 3.3V Ultra-Low-Dropout Linear Regulator",
+      "category": "power",
+      "mpn": "LP2985-33DBVR",
+      "package": "SOT-23-5",
+      "description": "Precision fixed-voltage 3.3V regulator supplying up to 150 mA for 3.3V sensors, displays, and external low-voltage microchips.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "crystal-16mhz",
+      "name": "16.000 MHz Quartz Crystal Oscillator",
+      "category": "crystal",
+      "mpn": "ABLS-16.000MHZ-B4-T",
+      "package": "HC-49/S Low-Profile Through-Hole Metal Can",
+      "description": "High-stability quartz crystal resonator paired with dual 22pF ceramic load capacitors to drive the primary XTAL1/XTAL2 oscillator circuit of ATmega328P.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "resonator-16mhz",
+      "name": "16.000 MHz SMD Ceramic Resonator",
+      "category": "crystal",
+      "mpn": "CSTCE16M0V53-R0",
+      "package": "CSTCE 3213 SMD (3-Pad with built-in capacitors)",
+      "description": "Compact 3-terminal piezoelectric ceramic resonator with integrated load capacitors driving the ATmega16U2 USB transceiver clock.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "usb-b-port",
+      "name": "USB Type-B Female Receptacle (Through-Hole)",
+      "category": "connector",
+      "mpn": "614004160021",
+      "package": "Through-Hole Right-Angle 4-Pin + 2 Shell Shield Tabs",
+      "description": "Heavy-duty industrial USB Type-B port providing reliable 5V USB bus power and differential D+/D- serial communications.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "dc-barrel-jack",
+      "name": "DC Power Barrel Jack 2.1mm x 5.5mm",
+      "category": "connector",
+      "mpn": "PJ-002A",
+      "package": "Through-Hole Right-Angle 3-Pin",
+      "description": "Standard 2.1mm center-positive barrel connector for external DC power adapters ranging from 7V to 12V.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "reset-switch",
+      "name": "Tactile Reset Pushbutton Switch",
+      "category": "passive",
+      "mpn": "B3F-1000",
+      "package": "SMD / Through-Hole 4-Pin 6.0 x 6.0 mm",
+      "description": "Normally-open momentary tactile pushbutton connecting ATmega328P Pin 1 (/RESET) to ground, forcing MCU hardware reset.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-10pin-digital",
+      "name": "10-Pin Female Header Strip (Digital 8-13, GND, AREF, SDA, SCL)",
+      "category": "header",
+      "mpn": "SSQ-110-01-T-S",
+      "package": "Single Row 1x10 0.1\" (2.54mm) Through-Hole",
+      "description": "Upper digital header row exposing SPI lines (D10-D13), internal LED (D13), analog reference (AREF), ground, and secondary duplicate I2C pins (SDA, SCL).",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-8pin-digital",
+      "name": "8-Pin Female Header Strip (Digital 0-7, UART RX/TX, PWM)",
+      "category": "header",
+      "mpn": "SSQ-108-01-T-S",
+      "package": "Single Row 1x8 0.1\" (2.54mm) Through-Hole",
+      "description": "Digital header row exposing Hardware Serial (D0 RX, D1 TX), External Interrupts (D2, D3), and PWM channels (D3, D5, D6).",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-8pin-power",
+      "name": "8-Pin Female Header Strip (Power & System Reset)",
+      "category": "header",
+      "mpn": "SSQ-108-01-G-S",
+      "package": "Single Row 1x8 0.1\" (2.54mm) Through-Hole",
+      "description": "Power delivery header providing IOREF (5V), RESET, 3.3V (150mA max), 5.0V (regulated or USB bus), dual GND pins, and raw VIN (7-12V).",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-6pin-analog",
+      "name": "6-Pin Female Header Strip (Analog Inputs A0 - A5)",
+      "category": "header",
+      "mpn": "SSQ-106-01-T-S",
+      "package": "Single Row 1x6 0.1\" (2.54mm) Through-Hole",
+      "description": "Analog input header connected to ATmega328P internal 10-bit Successive Approximation ADC multiplexer. A4/A5 also serve as primary hardware I2C bus (SDA/SCL).",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-icsp-2x3",
+      "name": "2x3 In-Circuit Serial Programming (ICSP) Header",
+      "category": "header",
+      "mpn": "M20-9980345",
+      "package": "2x3 Male Pin Header 0.1\" (2.54mm Pitch)",
+      "description": "Direct AVR SPI hardware programming header for burning Optiboot bootloader or firmware directly into ATmega328P flash memory via Atmel-ICE or USBasp programmer.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "header-16u2-icsp",
+      "name": "2x3 ICSP Header for ATmega16U2",
+      "category": "header",
+      "mpn": "M20-9980345-16U2",
+      "package": "2x3 Male Pin Header 0.1\" Pitch",
+      "description": "Secondary 6-pin ICSP header positioned near USB-B port for flashing custom USB DFU firmware or MIDI/HID controller code onto ATmega16U2.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "cap-electrolytic-100uf",
+      "name": "100uF 25V Aluminum Electrolytic Capacitor",
+      "category": "passive",
+      "mpn": "EEE-FT1E101AR",
+      "package": "Radial Can 6.3mm Diameter SMD / Through-Hole",
+      "description": "Bulk input smoothing capacitor filtering low-frequency AC ripple and input voltage transients from external DC barrel jack power.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "cap-electrolytic-47uf",
+      "name": "47uF 25V Aluminum Electrolytic Capacitor",
+      "category": "passive",
+      "mpn": "UWT1E470MCL1GS",
+      "package": "Radial SMD Can 5.0mm Diameter",
+      "description": "Output reservoir capacitor stabilizing the 5.0V power rail, suppressing voltage dips when switching loads or wireless modules.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "cap-ceramic-100nf",
+      "name": "100nF (0.1uF) 50V Ceramic Decoupling Capacitor",
+      "category": "passive",
+      "mpn": "GRM21BR71H104KA01L",
+      "package": "SMD 0805 (2012 Metric)",
+      "description": "High-frequency decoupling capacitor placed in immediate proximity to IC power pins to shunt digital switching noise to ground.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "cap-ceramic-22pf",
+      "name": "22pF 50V Ceramic Crystal Load Capacitor",
+      "category": "passive",
+      "mpn": "C0603C220J5GACTU",
+      "package": "SMD 0603 (1608 Metric)",
+      "description": "Ultra-stable C0G dielectric load capacitor matched to the 16MHz crystal resonant loop.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "resistor-1k-0805",
+      "name": "1.0 k\u03a9 1% Thick Film SMD Resistor",
+      "category": "passive",
+      "mpn": "CRCW08051K00FKEA",
+      "package": "SMD 0805 (2012 Metric)",
+      "description": "Current-limiting resistor for onboard status LEDs (L, TX, RX) and protection lines.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "resistor-10k-0805",
+      "name": "10 k\u03a9 1% SMD Pullup Resistor",
+      "category": "passive",
+      "mpn": "RC0805FR-0710KL",
+      "package": "SMD 0805 (2012 Metric)",
+      "description": "Standard pullup resistor holding ATmega328P Pin 1 (/RESET) firmly at 5.0V during normal operation.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "resistor-network-1k",
+      "name": "4x 1k\u03a9 Isolated Resistor Network (CAY16)",
+      "category": "passive",
+      "mpn": "CAY16-102J4LF",
+      "package": "1206 (3216 Metric) 8-Terminal Array",
+      "description": "Integrated quad-resistor network providing matched series protection resistors for UART communication and status LED lines.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "led-smd-yellow-l",
+      "name": "Yellow 0805 SMD LED (Pin 13 \"L\" Indicator)",
+      "category": "led",
+      "mpn": "LTST-C170YKT",
+      "package": "SMD 0805 (2012 Metric)",
+      "description": "Onboard user test LED driven by ATmega328P Digital Pin 13 through an LMV358 dual operational amplifier buffer stage.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "led-smd-green-on",
+      "name": "Green 0805 SMD LED (\"ON\" Power Indicator)",
+      "category": "led",
+      "mpn": "APT2012SGC",
+      "package": "SMD 0805 (2012 Metric)",
+      "description": "Permanent green power status LED wired across the 5.0V rail and GND through a 1k\u03a9 current-limiting resistor.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "led-smd-yellow-tx",
+      "name": "Yellow 0805 SMD LED (\"TX\" Transmit Indicator)",
+      "category": "led",
+      "mpn": "LTST-C170YKT-TX",
+      "package": "SMD 0805",
+      "description": "Flashes yellow whenever ATmega16U2 transmits serial data packets to the host computer over USB.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "led-smd-yellow-rx",
+      "name": "Yellow 0805 SMD LED (\"RX\" Receive Indicator)",
+      "category": "led",
+      "mpn": "LTST-C170YKT-RX",
+      "package": "SMD 0805",
+      "description": "Flashes yellow whenever host computer sends serial data packets to the Uno over USB.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "diode-schottky-ss14",
+      "name": "SS14 1.0A 40V Surface Mount Schottky Barrier Rectifier",
+      "category": "passive",
+      "mpn": "SS14-E3/61T",
+      "package": "SMA / DO-214AC",
+      "description": "Fast-recovery low-forward-drop Schottky diode placed in series with the DC barrel jack input to protect board circuitry against inverted DC polarity.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "polyfuse-500ma",
+      "name": "500mA Resettable PTC Polyfuse (MF-MSMF050)",
+      "category": "power",
+      "mpn": "MF-MSMF050-2",
+      "package": "SMD 1812 (4532 Metric)",
+      "description": "Overcurrent protection device positioned between the USB-B connector 5V pin and the board power rail. Trips automatically if peripheral current exceeds 500mA.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "opamp-lmv358",
+      "name": "LMV358 Dual Rail-to-Rail Low-Voltage Operational Amplifier",
+      "category": "ic",
+      "mpn": "LMV358IDGKR",
+      "package": "MSOP-8 / SOIC-8",
+      "description": "Dual rail-to-rail operational amplifier performing two vital tasks: Channel A serves as an auto-switching voltage comparator toggling between USB power and DC barrel power, and Channel B acts as a high-impedance buffer driving the Pin 13 \"L\" LED without loading the microcontroller GPIO.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    },
+    {
+      "id": "dip-socket-28",
+      "name": "28-Pin Dual-In-Line (DIP) IC Socket",
+      "category": "connector",
+      "mpn": "110-93-328-41-001000",
+      "package": "DIP-28 Through-Hole 0.1\" Pin Pitch x 0.3\" Row Spacing",
+      "description": "Precision machined dual-contact socket allowing tool-less replacement of the ATmega328P microcontroller chip in the event of an electrical failure.",
+      "operatingVoltage": "5.0V",
+      "riskFactor": "low"
+    }
+  ],
+  "board": "Arduino Uno R3 & ESP32 DevKit",
+  "pinoutRules": [
+    {
+      "pin": "5V",
+      "maxCurrentMa": 500,
+      "type": "power"
+    },
+    {
+      "pin": "3.3V",
+      "maxCurrentMa": 150,
+      "type": "power"
+    },
+    {
+      "pin": "GPIO",
+      "maxCurrentMa": 20,
+      "absMaxMa": 40,
+      "logicLevel": "5.0V TTL"
+    },
+    {
+      "pin": "I2C",
+      "pins": [
+        "A4 (SDA)",
+        "A5 (SCL)"
+      ],
+      "pullup": "Requires external 4.7k\u03a9 on 3.3V devices"
+    },
+    {
+      "pin": "SPI",
+      "pins": [
+        "D10 (SS)",
+        "D11 (MOSI)",
+        "D12 (MISO)",
+        "D13 (SCK)"
+      ],
+      "maxClock": "8MHz"
+    }
+  ]
+}

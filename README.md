@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Zustand](https://img.shields.io/badge/State-Zustand-orange)](https://github.com/pmndrs/zustand)
-[![Zero Backend](https://img.shields.io/badge/Backend-100%25%20Offline-success)](https://github.com)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2B%20PyTorch-green)](https://fastapi.tiangolo.com)
 
 > **Hackathon Track:** *Computer Vision, Edge AI & Hardware Security*  
 > **Team:** *Access Denied*  
@@ -19,9 +19,9 @@ Engineers, hardware developers, and technicians struggle with:
 1. **Manual Inspection Fatigue:** Identifying tiny surface-mount components (0805, 0603, QFN), reading microscopic laser markings, and spotting cold joints or solder bridges with bare eyes is slow, tiring, and prone to severe oversights.
 2. **Datasheet Context Switching:** Constantly switching back and forth between physical PCBs and 400-page PDF datasheets to cross-reference pin numbers, timer registers, and voltage limits breaks engineering flow.
 3. **Catastrophic Power-On Smoke:** Connecting an unregulated power supply to the wrong header pin or energizing a board with an undetected solder bridge across power rails destroys expensive microcontrollers, regulators, and host PC USB controllers.
-4. **Tooling Inaccessibility:** Industrial automated optical inspection (AOI) machines cost upwards of \$50,000, leaving students, makerspaces, and rapid prototyping labs without reliable quality control tools.
+4. **Tooling Inaccessibility:** Industrial automated optical inspection (AOI) machines cost upwards of $50,000, leaving students, makerspaces, and rapid prototyping labs without reliable quality control tools.
 
-**VisionGuard solves this by bringing AI and AR-powered visual hardware inspection directly into any standard web browser or mobile phone—zero setup, zero backend, and 100% offline.**
+**VisionGuard solves this by bringing AI and AR-powered visual hardware inspection directly into any standard web browser or mobile phone—with both zero-backend simulation and live FastAPI + PyTorch computer vision inference.**
 
 ---
 
@@ -37,7 +37,7 @@ Engineers, hardware developers, and technicians struggle with:
 - **Pinout & Hardware Bus Matrix:** Exact pinout maps documenting hardware PWM frequencies, ADC resolutions, I2C/SPI bus routes, and current thresholds (20mA recommended, 40mA absolute max for ATmega328P).
 - **Component Knowledge Hub:** Authenticated specifications, electrical ratings, failure modes, and manufacturer part numbers for 25+ real components.
 - **Hardware Copilot AI Assistant:** Streaming conversational troubleshooting agent ingesting localized bounding boxes, pinout rules, and defect logs.
-- **Global Command Palette (⌘K / Ctrl+K):** Instant keyboard-driven lookup of components, pinouts, defect checklists, and boards.
+- **Global Command Palette (Ctrl+K):** Instant keyboard-driven lookup of components, pinouts, defect checklists, and boards.
 - **Industrial AI Design System:** Futuristic dark command center aesthetic with cyan/teal accents, blueprint grid backdrops, custom scan-line animations, and full WCAG AA accessibility from 360px mobile to 4K displays.
 
 ---
@@ -52,11 +52,11 @@ graph TD
         B --> C["AI Adapter Manager (lib/ai/index.ts)"]
         C --> D{"Active Mode"}
         D -->|Default Demo| E["SimulatedDetector (lib/ai/simulated.ts)"]
-        D -->|Drop-in Real AI| F["ONNX WebAssembly / WebGPU (lib/ai/onnx-adapter.stub.ts)"]
+        D -->|Live Model Mode| F["BackendDetectorAdapter (lib/ai/backend-adapter.ts)"]
         D -->|Browser Transformers| G["Transformers.js DETR / YOLOS (lib/ai/transformers-adapter.stub.ts)"]
         
         E --> H["Normalized Bbox & Class Translation (lib/ai/mapping.ts)"]
-        F --> H
+        F -->|POST /api/detect| H
         G --> H
     end
 
@@ -69,9 +69,9 @@ graph TD
 
     subgraph "Reasoning & User Interfaces"
         J --> M["Studio Inspector Drawer"]
-        K --> N["AI Assistant Copilot (lib/ai/simulated.ts)"]
+        K --> N["AI Assistant Copilot (lib/ai/backend-adapter.ts)"]
         L --> M
-        I --> O["Global Command Palette (⌘K)"]
+        I --> O["Global Command Palette"]
         I --> P["BOM & Compliance Reports"]
     end
 ```
@@ -80,50 +80,60 @@ graph TD
 
 ## 4. Setup & Running Locally
 
-VisionGuard runs entirely client-side without any backend servers, Python dependencies, database configurations, or API keys.
+VisionGuard offers both a standalone client-side demo mode and a live FastAPI + PyTorch computer vision inference engine.
 
 ### Prerequisites
 - Node.js 18.x or 20.x
+- Python 3.11+ (for backend inference)
 - npm, pnpm, or yarn
 
-### Quick Start
+### Quick Start (Full-Stack: Frontend + Live CV Backend)
 ```bash
-# 1. Clone the repository
-git clone https://github.com/access-denied/visionguard.git
-cd visionguard
-
-# 2. Install dependencies
+# 1. Start the Next.js Frontend (Port 3000)
 npm install
-
-# 3. Start the Next.js development server
 npm run dev
+
+# 2. In a second terminal, start the FastAPI Backend (Port 8000)
+cd backend
+python -m venv .venv
+# On Windows:
+.\.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+python scripts/download_models.py
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your web browser.
+Or run both concurrently on Windows using:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/start_dev.ps1
+```
+
+- Open [http://localhost:3000](http://localhost:3000) to access the VisionGuard Inspection Studio.
+- Open [http://localhost:8000/docs](http://localhost:8000/docs) for the interactive FastAPI Swagger API documentation.
 
 ---
 
-## 5. Engineering Transparency: Simulated vs. Real AI
+## 5. Engineering Transparency: Provenance & Models
 
-In accordance with hackathon guidelines, VisionGuard maintains strict, transparent provenance labeling:
+VisionGuard strictly adheres to hackathon transparency guidelines and explicitly stamps all detections and defects with their origin:
 
-| Feature Dimension | What is 100% REAL in UI | What is SIMULATED for Demo |
+| Feature Dimension | Mode: Simulated | Mode: Live Backend Model |
 | :--- | :--- | :--- |
-| **AR Vector Canvas** | Full interactive SVG overlay engine, coordinate math, hover inspection, bounding box rendering. | Coordinate values match bundled reference board samples. |
-| **Component Specs** | 25+ real component datasheets, manufacturer part numbers, absolute maximum ratings, timer mappings. | Detections are triggered deterministically without requiring cloud compute. |
-| **Defect Findings** | IPC-A-610 Class 2/3 classification rules, multimeter resistance checks, desoldering rework instructions. | The 5 defects in Variant B are pre-injected to guarantee an under-3-minute live pitch. |
-| **Confidence Scores** | Confidence threshold filtering and mathematical visual styling. | Percentages represent sample calibration values, not live neural accuracy. |
-| **AI Assistant** | Full async token-by-token streaming, contextual hardware ingestion, and markdown formatting. | Generated locally by circuit reasoning rules without third-party API dependencies. |
-| **AI Adapter Layer** | TypeScript interfaces (`DetectorAdapter`, `DefectAdapter`, `AssistantAdapter`) ready for ONNX/WASM. | Ready to mount real weights (`.onnx` or Hugging Face models) with zero code rewrites. |
+| **Component Detection** | Deterministic catalog coordinates (`source: "simulated"`). | Live YOLOv8/26 model (`source: "model"`), top-left normalized `{x, y, w, h}` bounding boxes. |
+| **Defect Detection** | Pre-injected reference board defects for instant presentation. | OpenCV heuristic solder bridge & thermal stress inspection (`source: "heuristic"`). |
+| **AI Assistant** | Offline heuristic hardware rule responses. | Context-grounded SSE streaming with hardware context. |
+| **Inference Engine** | Client-side zero latency simulation. | FastAPI + PyTorch on CPU or CUDA GPU (`/api/detect`, `/api/defects`, `/api/analyze`). |
 
 ---
 
-## 6. Project Roadmap
+## 6. Model Attribution & Licenses
 
-- [x] **Phase 1 (Setup & Architecture):** Project scaffold, industrial AI design tokens, SVG vector board illustrations (Uno standard, Uno Variant B, ESP32), types, Zustand store, and `lib/ai/` adapter interfaces.
-- [ ] **Phase 2 (Inspection Studio & AR Overlays):** Live video feed ingestion, canvas zoom/pan viewport, dynamic multi-layer filters, and AR pinout mapping lines.
-- [ ] **Phase 3 (AI Assistant & Defect Engine):** Interactive streaming copilot, IPC-A-610 rework checklists, and BOM manager.
-- [ ] **Phase 4 (Testing & Polished Hackathon Demo):** End-to-end 3-minute pitch demo flow, performance benchmarks, and deployment.
+- **YOLO PCB Component Detector**: [ParsaVictor/pcb-component-detection-yolo26](https://huggingface.co/ParsaVictor/pcb-component-detection-yolo26) - MIT License.
+- **PCB Segmentation & Datasets**: [SanderGi/PCB-Detection](https://github.com/SanderGi/PCB-Detection) - MIT License.
+- **VisionGuard Full-Stack Platform**: Team Access Denied - MIT License.
 
 ---
 

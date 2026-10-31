@@ -17,7 +17,7 @@ import { StudioRightPanel } from '@/components/studio/StudioRightPanel';
 import { ProvenanceBadge } from '@/components/shell/ProvenanceBadge';
 
 export default function StudioPage() {
-  const { activeBoard, setActiveBoard, boards, addToast } = useVisionStore();
+  const { activeBoard, setActiveBoard, boards, addToast, isModelConnected, aiMode } = useVisionStore();
   const [showDismissibleBanner, setShowDismissibleBanner] = useState(true);
 
   return (
@@ -32,7 +32,7 @@ export default function StudioPage() {
             <h1 className="font-display font-bold text-sm text-text-primary tracking-wide truncate">
               Live Inspection Studio
             </h1>
-            <ProvenanceBadge source="simulated" />
+            <ProvenanceBadge source={isModelConnected || aiMode === "model" ? "model" : "simulated"} />
           </div>
         </div>
 
@@ -63,17 +63,31 @@ export default function StudioPage() {
 
       {/* Dismissible Simulation Disclaimer Banner */}
       {showDismissibleBanner && (
-        <div className="bg-amber-950/40 border-b border-amber-500/30 px-4 py-2 text-xs font-mono text-amber-200 flex items-center justify-between shrink-0 z-10 animate-in slide-in-from-top-2 duration-150">
+        <div className={isModelConnected 
+          ? "bg-emerald-950/40 border-b border-emerald-500/40 px-4 py-2 text-xs font-mono text-emerald-200 flex items-center justify-between shrink-0 z-10 animate-in slide-in-from-top-2 duration-150"
+          : "bg-amber-950/40 border-b border-amber-500/30 px-4 py-2 text-xs font-mono text-amber-200 flex items-center justify-between shrink-0 z-10 animate-in slide-in-from-top-2 duration-150"
+        }>
           <div className="flex items-center gap-2 truncate">
-            <Info className="w-4 h-4 text-amber-400 shrink-0" />
+            {isModelConnected ? (
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            ) : (
+              <Info className="w-4 h-4 text-amber-400 shrink-0" />
+            )}
             <span className="truncate">
-              <strong>Simulated Inspection Engine:</strong> Component boxes & defects are rendered by VisionGuard&apos;s
-              offline model. Connect a live ONNX/YOLO adapter in <code>lib/ai/</code> to evaluate live weights.
+              {isModelConnected ? (
+                <>
+                  <strong className="text-emerald-300">Live AI Engine Active:</strong> Connected to FastAPI backend with ParsaVictor YOLOv8 (13 PCB classes) &amp; OpenCV IPC-A-610 on <code>http://localhost:8000</code>.
+                </>
+              ) : (
+                <>
+                  <strong>Simulated Inspection Engine:</strong> Component boxes &amp; defects are rendered by VisionGuard&apos;s offline model. Connect a live ONNX/YOLO adapter in <code>lib/ai/</code> to evaluate live weights.
+                </>
+              )}
             </span>
           </div>
           <button
             onClick={() => setShowDismissibleBanner(false)}
-            className="text-amber-400 hover:text-amber-200 underline text-[11px] ml-4 shrink-0"
+            className={isModelConnected ? "text-emerald-400 hover:text-emerald-200 underline text-[11px] ml-4 shrink-0" : "text-amber-400 hover:text-amber-200 underline text-[11px] ml-4 shrink-0"}
           >
             Dismiss
           </button>

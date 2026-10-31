@@ -32,3 +32,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# python & models
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+backend/models/*.pt
+backend/models/.cache/
+test-assets/out/
