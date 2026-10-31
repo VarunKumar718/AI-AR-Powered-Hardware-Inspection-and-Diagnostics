@@ -1,13 +1,8 @@
 /**
  * VisionGuard Python Backend Adapter
  *
- * Connects the Next.js frontend to the FastAPI + PyTorch/YOLO inference engine
- * running on NEXT_PUBLIC_API_URL (default: http://localhost:8000).
- *
- * Implements:
- * - DetectorAdapter: POST /api/detect (ParsaVictor YOLOv8/26 model)
- * - DefectAdapter:   POST /api/defects (OpenCV heuristic solder bridge & thermal analysis)
- * - AssistantAdapter: POST /api/assistant (SSE streaming copilot)
+ * Implements DetectorAdapter, DefectAdapter, and AssistantAdapter by delegating
+ * all network calls through the unified `apiClient` (/backend relative proxy).
  */
 
 import {
@@ -18,12 +13,7 @@ import {
   AssistantContext,
 } from './types';
 import { Detection, Defect, ChatMessage } from '@/types';
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-    ? ''
-    : 'http://localhost:8000');
+import { apiClient, ApiError } from '../api/client';
 
 /**
  * Converts various frontend visual sources (URL, data URI, Canvas, Video, ImageBitmap)
@@ -78,7 +68,7 @@ async function toImageBlob(
 }
 
 /**
- * Backend Detector Adapter using FastAPI YOLOv8/26 component detector.
+ * Backend Detector Adapter using apiClient /backend/detect
  */
 export class BackendDetectorAdapter implements DetectorAdapter {
   id = 'backend-yolo26';
@@ -106,23 +96,13 @@ export class BackendDetectorAdapter implements DetectorAdapter {
       formData.append('board_hint', opts.boardHint);
     }
 
-    const res = await fetch(`${API_BASE_URL}/api/detect`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!res.ok) {
-      const errText = await res.text().catch(() => res.statusText);
-      throw new Error(`Backend detection failed (${res.status}): ${errText}`);
-    }
-
-    const data = await res.json();
+    const data = await apiClient.detect(formData);
     return (data.detections || []) as Detection[];
   }
 }
 
 /**
- * Backend Defect Adapter using OpenCV heuristics for solder bridge and thermal stress.
+ * Backend Defect Adapter using apiClient /backend/defects
  */
 export class BackendDefectAdapter implements DefectAdapter {
   id = 'backend-defect-cv';
@@ -141,23 +121,13 @@ export class BackendDefectAdapter implements DefectAdapter {
     formData.append('file', blob, 'defect_frame.png');
     formData.append('detections_json', JSON.stringify(detections));
 
-    const res = await fetch(`${API_BASE_URL}/api/defects`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!res.ok) {
-      const errText = await res.text().catch(() => res.statusText);
-      throw new Error(`Backend defect analysis failed (${res.status}): ${errText}`);
-    }
-
-    const data = await res.json();
+    const data = await apiClient.defects(formData);
     return (data.defects || []) as Defect[];
   }
 }
 
 /**
- * Backend Assistant Adapter streaming SSE tokens from FastAPI /api/assistant.
+ * Backend Assistant Adapter streaming SSE tokens from apiClient /backend/assistant
  */
 export class BackendAssistantAdapter implements AssistantAdapter {
   id = 'backend-copilot';
@@ -171,24 +141,20 @@ export class BackendAssistantAdapter implements AssistantAdapter {
   }): AsyncIterable<string> {
     let res: Response;
     try {
-      res = await fetch(`${API_BASE_URL}/api/assistant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      });
-    } catch (e) {
-      yield `Failed to connect to VisionGuard backend at ${API_BASE_URL}. Ensure the FastAPI server is running. (${e instanceof Error ? e.message : 'Network error'})`;
+      res = await apiClient.postAssistantStream(input);
+    } catch (e: any) {
+      yield `Failed to connect to VisionGuard backend: ${e.message}. Using simulated offline response.`;
       return;
     }
 
     if (res.status === 503) {
-      yield 'VisionGuard backend is online, but no AI API key (GEMINI_API_KEY or OPENAI_API_KEY) is configured in backend/.env. Add an API key to enable live Copilot answers.';
+      yield '[Simulated response] Assistant backend is online, but no external LLM API key is configured. Operating with local circuit reasoning rules.';
       return;
     }
 
     if (!res.ok) {
       const err = await res.text().catch(() => res.statusText);
-      yield `Backend copilot returned error (${res.status}): ${err}`;
+      yield `Backend copilot error (${res.status}): ${err}`;
       return;
     }
 
@@ -216,10 +182,11 @@ export class BackendAssistantAdapter implements AssistantAdapter {
           const data = trimmed.slice(6);
           if (data === '[DONE]') return;
           try {
-            // Could be raw string or json-encoded string
             const parsed = JSON.parse(data);
             if (typeof parsed === 'string') {
               yield parsed;
+            } else if (parsed && parsed.content) {
+              yield parsed.content;
             } else if (parsed && parsed.text) {
               yield parsed.text;
             }
@@ -234,33 +201,6 @@ export class BackendAssistantAdapter implements AssistantAdapter {
       const data = buffer.trim().slice(6);
       if (data !== '[DONE]') yield data;
     }
-  }
-}
-
-/**
- * Health check helper to verify if the FastAPI backend is online and models are loaded.
- */
-export async function checkBackendHealth(): Promise<{
-  online: boolean;
-  device?: string;
-  modelsLoaded?: boolean;
-  version?: string;
-}> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/health`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
-    if (!res.ok) return { online: false };
-    const data = await res.json();
-    return {
-      online: data.status === 'healthy',
-      device: data.device,
-      modelsLoaded: data.modelsLoaded,
-      version: data.version,
-    };
-  } catch {
-    return { online: false };
   }
 }
 

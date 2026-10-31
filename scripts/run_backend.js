@@ -1,26 +1,40 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const os = require('os');
+const fs = require('fs');
 
 const backendDir = path.join(__dirname, '..', 'backend');
-const isWin = os.platform() === 'win32';
-const pythonExe = isWin
-  ? path.join(backendDir, '.venv', 'Scripts', 'python.exe')
-  : path.join(backendDir, '.venv', 'bin', 'python');
+let pythonExe = path.join(backendDir, '.venv', 'Scripts', 'python.exe');
 
-console.log(`[VisionGuard] Launching FastAPI backend using ${pythonExe}...`);
+if (!fs.existsSync(pythonExe)) {
+  pythonExe = path.join(backendDir, '.venv', 'bin', 'python');
+}
 
-const proc = spawn(
-  pythonExe,
-  ['-m', 'uvicorn', 'app.main:app', '--host', '0.0.0.0', '--port', '8000', '--reload'],
-  { cwd: backendDir, stdio: 'inherit' }
-);
+if (!fs.existsSync(pythonExe)) {
+  pythonExe = 'python';
+}
 
-proc.on('error', (err) => {
-  console.error('[VisionGuard Backend Error]:', err.message);
-  process.exit(1);
+console.log(`[VisionGuard] Starting Python FastAPI backend using ${pythonExe}...`);
+
+const backend = spawn(pythonExe, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
+  cwd: backendDir,
+  stdio: 'inherit',
+  shell: true,
 });
 
-proc.on('close', (code) => {
-  process.exit(code || 0);
+backend.on('error', (err) => {
+  console.error('[VisionGuard Backend Error]:', err);
+});
+
+backend.on('exit', (code) => {
+  console.log(`[VisionGuard Backend] Exited with code ${code}`);
+});
+
+process.on('SIGINT', () => {
+  backend.kill('SIGINT');
+  process.exit();
+});
+
+process.on('SIGTERM', () => {
+  backend.kill('SIGTERM');
+  process.exit();
 });

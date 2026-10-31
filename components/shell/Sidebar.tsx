@@ -40,7 +40,7 @@ export const NAV_ITEMS = [
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
-  const { isSidebarCollapsed, toggleSidebar } = useVisionStore();
+  const { isSidebarCollapsed, toggleSidebar, isModelConnected, aiMode, lastInferenceMs, device } = useVisionStore();
 
   return (
     <aside
@@ -157,8 +157,8 @@ export const Sidebar: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${isModelConnected ? 'bg-emerald-400' : 'bg-amber-400'} opacity-75`} />
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isModelConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
               </span>
               {!isSidebarCollapsed && (
                 <span className="text-xs font-mono font-semibold text-text-primary">
@@ -167,8 +167,8 @@ export const Sidebar: React.FC = () => {
               )}
             </div>
             {!isSidebarCollapsed && (
-              <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 border border-amber-500/30 px-1.5 py-0.5 rounded">
-                SIM DEMO
+              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${isModelConnected ? 'text-emerald-300 bg-emerald-950/60 border-emerald-500/30' : 'text-amber-300 bg-amber-950/60 border-amber-500/30'}`}>
+                {isModelConnected ? 'LIVE YOLO' : 'SIM DEMO'}
               </span>
             )}
           </div>
@@ -177,11 +177,15 @@ export const Sidebar: React.FC = () => {
             <div className="space-y-1 pt-1 text-[11px] text-text-muted">
               <div className="flex justify-between items-center">
                 <span>Inference Engine:</span>
-                <span className="font-mono text-text-secondary">Sim-v1.4</span>
+                <span className="font-mono text-text-secondary">
+                  {isModelConnected ? 'YOLOv8-PCB' : 'offline / simulation'}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span>Avg Latency:</span>
-                <span className="font-mono text-emerald-400">210 ms</span>
+                <span className={`font-mono ${isModelConnected ? 'text-emerald-400' : 'text-text-muted'}`}>
+                  {isModelConnected ? `${lastInferenceMs || 220} ms` : 'offline'}
+                </span>
               </div>
             </div>
           )}

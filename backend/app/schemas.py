@@ -88,7 +88,7 @@ class ChatMessage(BaseModel):
     id: str
     role: Literal["user", "assistant", "system"]
     content: str
-    timestamp: str
+    timestamp: Optional[str] = ""
     citations: Optional[List[Citation]] = None
     codeSnippet: Optional[CodeSnippet] = None
 

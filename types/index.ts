@@ -9,7 +9,7 @@ export type Category =
   | 'led'
   | 'other';
 
-export type DetectionSource = 'simulated' | 'model' | 'manual';
+export type DetectionSource = 'simulated' | 'model' | 'manual' | 'heuristic' | 'llm';
 
 export interface BoundingBox {
   x: number; // 0 to 1 normalized top-left x

@@ -1110,4 +1110,40 @@ export const HARDWARE_COMPONENTS: ComponentItem[] = [
     relatedComponentIds: ['atmega328p'],
     riskFactor: 'low',
   },
+  {
+    id: 'other',
+    name: 'Generic Component / Passive Device',
+    genericName: 'Unclassified PCB Hardware',
+    category: 'other',
+    package: 'Discrete SMD / Through-Hole',
+    manufacturer: 'Generic / Multiple Sources',
+    mpn: 'GEN-ELEC-COMP',
+    description:
+      'Discrete electronic or electromechanical component identified by YOLO neural vision inference that is not uniquely assigned to a specific catalog part number. Includes transistors, inductors, test pads, and secondary passives.',
+    keySpecs: {
+      'Classification': 'Neural Vision Detected Discrete',
+      'Mounting Style': 'Surface Mount (SMD) / Through-Hole (THT)',
+      'Tolerance': 'Standard IPC Class 2',
+      'Inspection Rule': 'Verify solder wetting, polarity orientation, and physical alignment against board schematic.',
+    },
+    typicalUse: 'General circuit functioning, power filtering, switching, or structural fiducial reference.',
+    operatingVoltage: 'Dependent on circuit net',
+    failureModes: [
+      {
+        symptom: 'Cold solder joint, component tombstoning, or open circuit',
+        probableCause: 'Reflow profile thermal imbalance or insufficient solder paste',
+        diagnosticCheck: 'Check joint under 20x inspection microscope and test continuity across pads with DMM.',
+        prevention: 'Ensure balanced copper pad thermal relief in PCB CAD layout.',
+      },
+    ],
+    datasheet: {
+      title: 'Standard PCB Electronic Component Reference & Inspection Criteria',
+      manufacturer: 'IPC Association Connecting Electronics Industries',
+      partNumber: 'IPC-A-610H',
+      placeholderUrl: 'https://www.ipc.org',
+      summary: 'Acceptability of Electronic Assemblies inspection standards.',
+    },
+    relatedComponentIds: [],
+    riskFactor: 'low',
+  },
 ];

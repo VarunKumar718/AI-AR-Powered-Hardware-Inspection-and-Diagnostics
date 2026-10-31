@@ -138,7 +138,7 @@ export const TopBar: React.FC = () => {
             }`}
           />
           <span className="hidden sm:inline">
-            {aiMode === 'simulated' ? 'SIMULATED DEMO DATA' : 'LIVE MODEL ACTIVE'}
+            {aiMode === 'simulated' ? 'SIMULATED DEMO DATA' : 'LIVE MODEL'}
           </span>
           <span className="sm:hidden">
             {aiMode === 'simulated' ? 'SIM' : 'LIVE'}

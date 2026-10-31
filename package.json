@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:all": "concurrently -n \"FRONTEND,BACKEND\" -c \"cyan,green\" \"npm run dev\" \"node scripts/run_backend.js\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
