@@ -14,7 +14,7 @@ interface AppShellProps {
 
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-bg-deepest text-text-primary circuit-pattern">
+    <div className="flex h-screen w-screen overflow-hidden bg-bg-base text-text-primary">
       {/* Desktop Left Collapsible Sidebar */}
       <Sidebar />
 

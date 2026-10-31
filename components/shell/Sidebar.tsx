@@ -44,29 +44,23 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col bg-bg-base/95 backdrop-blur-md border-r border-border-subtle transition-all duration-300 z-30 select-none ${
-        isSidebarCollapsed ? 'w-20' : 'w-64'
+      className={`hidden md:flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-150 z-30 select-none ${
+        isSidebarCollapsed ? 'w-16' : 'w-60'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-border-subtle">
-        <Link href="/" className="flex items-center gap-3 overflow-hidden group">
-          {/* Stylized Chip / Eye Mark */}
-          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-500 p-[1.5px] shrink-0 shadow-cyan-glow group-hover:scale-105 transition-transform duration-200">
-            <div className="w-full h-full bg-bg-deepest rounded-[10px] flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                <div className="w-6 h-6 border border-cyan-400/40 rounded-sm" />
-              </div>
-              <ScanEye className="w-5 h-5 text-cyan-400" />
-            </div>
+      <div className="h-14 flex items-center justify-between px-3.5 border-b border-slate-200 dark:border-slate-800">
+        <Link href="/" className="flex items-center gap-2.5 overflow-hidden group">
+          <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 flex items-center justify-center shrink-0">
+            <ScanEye className="w-4 h-4 text-teal-600 dark:text-teal-400" />
           </div>
 
           {!isSidebarCollapsed && (
             <div className="flex flex-col">
-              <span className="font-display font-bold text-lg tracking-tight text-text-primary leading-none">
-                Vision<span className="text-brand-cyan">Guard</span>
+              <span className="font-semibold text-sm tracking-tight text-slate-900 dark:text-slate-100 leading-none">
+                VisionGuard
               </span>
-              <span className="text-[10px] font-mono tracking-widest text-text-muted mt-1 uppercase">
+              <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
                 Hardware AI OS
               </span>
             </div>
@@ -77,74 +71,47 @@ export const Sidebar: React.FC = () => {
         <button
           onClick={toggleSidebar}
           aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors border border-transparent hover:border-border-subtle"
+          className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           {isSidebarCollapsed ? (
-            <ChevronRight className="w-4 h-4 text-brand-cyan" />
+            <ChevronRight className="w-4 h-4" />
           ) : (
-            <ChevronLeft className="w-4 h-4 text-text-secondary" />
+            <ChevronLeft className="w-4 h-4" />
           )}
         </button>
       </div>
 
       {/* Navigation List */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5 scrollbar-thin">
+      <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5 scrollbar-thin">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
-
-          if (item.isPrimary) {
-            return (
-              <div key={item.href} className="py-1">
-                <Link
-                  href={item.href}
-                  className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group overflow-hidden ${
-                    isActive
-                      ? 'bg-gradient-to-r from-cyan-500/25 to-teal-500/20 text-cyan-300 border border-cyan-400/50 shadow-cyan-glow'
-                      : 'bg-cyan-950/40 text-cyan-300/90 border border-cyan-500/20 hover:border-cyan-400/40 hover:bg-cyan-900/30'
-                  }`}
-                  title={isSidebarCollapsed ? item.name : undefined}
-                >
-                  <div className="relative shrink-0 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-cyan-400 animate-pulse-subtle" />
-                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                  </div>
-                  {!isSidebarCollapsed && (
-                    <div className="flex items-center justify-between flex-1">
-                      <span className="font-semibold tracking-wide">{item.name}</span>
-                      <span className="text-[10px] font-mono uppercase bg-cyan-500/30 text-cyan-200 px-1.5 py-0.5 rounded border border-cyan-400/30">
-                        Live
-                      </span>
-                    </div>
-                  )}
-                </Link>
-              </div>
-            );
-          }
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors group relative ${
+              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-colors ${
                 isActive
-                  ? 'bg-bg-elevated text-brand-cyan border border-border-strong font-semibold'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-card/70'
+                  ? 'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-medium'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               title={isSidebarCollapsed ? item.name : undefined}
             >
               <Icon
-                className={`w-5 h-5 shrink-0 transition-colors ${
-                  isActive ? 'text-brand-cyan' : 'text-text-muted group-hover:text-text-primary'
+                className={`w-4 h-4 shrink-0 ${
+                  isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-400'
                 }`}
               />
               {!isSidebarCollapsed && (
-                <span className="truncate">{item.name}</span>
-              )}
-
-              {/* Active Indicator Bar */}
-              {isActive && (
-                <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-brand-cyan" />
+                <div className="flex items-center justify-between flex-1 truncate">
+                  <span className="truncate">{item.name}</span>
+                  {item.isPrimary && (
+                    <span className="text-[10px] uppercase font-medium bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 px-1.5 py-0.2 rounded">
+                      Live
+                    </span>
+                  )}
+                </div>
               )}
             </Link>
           );
@@ -152,36 +119,26 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Bottom Status Card */}
-      <div className="p-3 border-t border-border-subtle">
-        <div className="bg-bg-card border border-border-subtle rounded-xl p-3 flex flex-col gap-2">
+      <div className="p-3 border-t border-slate-200 dark:border-slate-800">
+        <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-lg p-2.5 flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
-              </span>
-              {!isSidebarCollapsed && (
-                <span className="text-xs font-mono font-semibold text-text-primary">
-                  EDGE ENGINE
-                </span>
-              )}
-            </div>
-            {!isSidebarCollapsed && (
-              <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 border border-amber-500/30 px-1.5 py-0.5 rounded">
-                SIM DEMO
-              </span>
-            )}
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
+              Edge Engine
+            </span>
+            <span className="text-[10px] font-medium text-[#B45309] bg-[#FEF3C7] border border-[#FDE68A] px-1.5 py-0.2 rounded">
+              SIM DEMO
+            </span>
           </div>
 
           {!isSidebarCollapsed && (
-            <div className="space-y-1 pt-1 text-[11px] text-text-muted">
+            <div className="space-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
               <div className="flex justify-between items-center">
-                <span>Inference Engine:</span>
-                <span className="font-mono text-text-secondary">Sim-v1.4</span>
+                <span>Model:</span>
+                <span className="font-mono text-slate-700 dark:text-slate-300">Sim-v1.4</span>
               </div>
               <div className="flex justify-between items-center">
-                <span>Avg Latency:</span>
-                <span className="font-mono text-emerald-400">210 ms</span>
+                <span>Latency:</span>
+                <span className="font-mono text-teal-600 dark:text-teal-400">210 ms</span>
               </div>
             </div>
           )}

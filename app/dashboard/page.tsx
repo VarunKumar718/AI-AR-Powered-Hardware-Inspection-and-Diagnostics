@@ -9,14 +9,11 @@ import {
   Layers,
   Bot,
   AlertTriangle,
-  CheckCircle2,
   Cpu,
   ArrowRight,
   Activity,
   History,
   TrendingUp,
-  Sparkles,
-  Zap,
   Info,
 } from 'lucide-react';
 import {
@@ -48,19 +45,20 @@ const INSPECTIONS_TREND_DATA = [
   { day: 'Sun', count: 20, passed: 18, flagged: 2 },
 ];
 
+// Teal + Slate monochromatic palette (No rainbow charts)
 const CATEGORY_DISTRIBUTION = [
-  { name: 'Passive (R/C/D)', value: 42, color: '#34D399' },
-  { name: 'Microcontroller & IC', value: 24, color: '#22D3EE' },
-  { name: 'Connectors & Headers', value: 20, color: '#FBBF24' },
-  { name: 'Power Regulators', value: 8, color: '#F87171' },
-  { name: 'Crystals & Resonators', value: 6, color: '#818CF8' },
+  { name: 'Passive (R/C/D)', value: 42, color: '#0D9488' },
+  { name: 'Microcontroller & IC', value: 24, color: '#14B8A6' },
+  { name: 'Connectors & Headers', value: 20, color: '#0F766E' },
+  { name: 'Power Regulators', value: 8, color: '#64748B' },
+  { name: 'Crystals & Resonators', value: 6, color: '#94A3B8' },
 ];
 
 const DEFECT_SEVERITY_BREAKDOWN = [
-  { severity: 'Critical', count: 4, fill: '#EF4444' },
-  { severity: 'High', count: 6, fill: '#F97316' },
-  { severity: 'Medium', count: 9, fill: '#FBBF24' },
-  { severity: 'Low', count: 5, fill: '#38BDF8' },
+  { severity: 'Critical', count: 4, fill: '#DC2626' },
+  { severity: 'High', count: 6, fill: '#EA580C' },
+  { severity: 'Medium', count: 9, fill: '#D97706' },
+  { severity: 'Low', count: 5, fill: '#64748B' },
 ];
 
 const CONFIDENCE_HISTOGRAM = [
@@ -76,21 +74,18 @@ export default function DashboardPage() {
   const router = useRouter();
   const { setActiveBoard, setSourceType, addToast } = useVisionStore();
 
-  // Animated Count-Up KPI numbers
   const [totalInspections, setTotalInspections] = useState(0);
   const [componentsIdentified, setComponentsIdentified] = useState(0);
   const [defectsFlagged, setDefectsFlagged] = useState(0);
   const [avgConfidence, setAvgConfidence] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const duration = 1200; // ms
+    const duration = 1000;
     const startTime = performance.now();
 
     const frame = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(1, elapsed / duration);
-      // easeOutCubic
       const ease = 1 - Math.pow(1 - progress, 3);
 
       setTotalInspections(Math.floor(ease * 162));
@@ -107,26 +102,25 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12 select-none">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12 select-none">
       {/* Dashboard Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-bg-card border border-border-strong shadow-card-glass">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-display font-bold text-text-primary">
+            <h1 className="text-xl md:text-2xl font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
               Hardware Quality & Inspection Analytics
             </h1>
             <ProvenanceBadge source="simulated" />
           </div>
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-slate-500">
             Continuous optical diagnostics, component identification rates, and defect trends.
           </p>
         </div>
 
-        {/* Quick Launch Buttons */}
         <div className="flex items-center gap-2">
           <Link
             href="/studio"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-bg-deepest font-bold text-xs shadow-cyan-glow transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs transition-colors shadow-sm"
           >
             <ScanEye className="w-4 h-4" />
             <span>Open Studio</span>
@@ -134,71 +128,71 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 1. ANIMATED COUNT-UP KPI CARDS */}
+      {/* 1. KPI CARDS */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {/* KPI 1 */}
-        <div className="p-4 rounded-2xl bg-bg-card border border-border-subtle flex flex-col justify-between gap-2 shadow-sm">
-          <span className="text-[11px] font-mono uppercase text-text-muted">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2 shadow-sm">
+          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
             Total Inspections
           </span>
-          <div className="text-2xl sm:text-3xl font-mono font-bold text-text-primary tabular-nums">
+          <div className="text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
             {totalInspections}
           </div>
-          <div className="flex items-center gap-1 text-[11px] text-emerald-400">
+          <div className="flex items-center gap-1 text-[11px] text-teal-700 dark:text-teal-400 font-medium">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>+14.2% vs last week</span>
+            <span>+14.2% this week</span>
           </div>
         </div>
 
         {/* KPI 2 */}
-        <div className="p-4 rounded-2xl bg-bg-card border border-border-subtle flex flex-col justify-between gap-2 shadow-sm">
-          <span className="text-[11px] font-mono uppercase text-text-muted">
-            Components Identified
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2 shadow-sm">
+          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
+            Components Found
           </span>
-          <div className="text-2xl sm:text-3xl font-mono font-bold text-brand-cyan tabular-nums">
+          <div className="text-2xl font-mono font-semibold text-teal-600 dark:text-teal-400 tabular-nums">
             {componentsIdentified.toLocaleString()}
           </div>
-          <div className="text-[11px] text-text-muted font-mono">
-            Across 25+ IPC classes
+          <div className="text-[11px] text-slate-500">
+            Across 25+ packages
           </div>
         </div>
 
         {/* KPI 3 */}
-        <div className="p-4 rounded-2xl bg-bg-card border border-border-subtle flex flex-col justify-between gap-2 shadow-sm">
-          <span className="text-[11px] font-mono uppercase text-text-muted">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2 shadow-sm">
+          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
             Defects Flagged
           </span>
-          <div className="text-2xl sm:text-3xl font-mono font-bold text-rose-400 tabular-nums">
+          <div className="text-2xl font-mono font-semibold text-rose-600 dark:text-rose-400 tabular-nums">
             {defectsFlagged}
           </div>
-          <div className="text-[11px] text-rose-300 font-mono">
-            4 Critical shorts caught
+          <div className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
+            4 Critical shorts
           </div>
         </div>
 
         {/* KPI 4 */}
-        <div className="p-4 rounded-2xl bg-bg-card border border-border-subtle flex flex-col justify-between gap-2 shadow-sm">
-          <span className="text-[11px] font-mono uppercase text-text-muted">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2 shadow-sm">
+          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
             Avg. Confidence
           </span>
-          <div className="text-2xl sm:text-3xl font-mono font-bold text-emerald-400 tabular-nums">
+          <div className="text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
             {avgConfidence}%
           </div>
-          <div className="text-[11px] text-text-muted font-mono">
-            Min threshold 65.0%
+          <div className="text-[11px] text-slate-500">
+            Min threshold 70%
           </div>
         </div>
 
         {/* KPI 5 */}
-        <div className="p-4 rounded-2xl bg-bg-card border border-border-subtle col-span-2 md:col-span-1 flex flex-col justify-between gap-2 shadow-sm">
-          <span className="text-[11px] font-mono uppercase text-text-muted">
-            Avg. Inference
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 col-span-2 md:col-span-1 flex flex-col justify-between gap-2 shadow-sm">
+          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
+            Avg. Latency
           </span>
-          <div className="text-2xl sm:text-3xl font-mono font-bold text-text-primary tabular-nums">
+          <div className="text-2xl font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
             210 ms
           </div>
-          <div className="text-[11px] text-brand-cyan font-mono">
-            Local browser execution
+          <div className="text-[11px] text-teal-600 dark:text-teal-400">
+            Client-side WebAssembly
           </div>
         </div>
       </div>
@@ -206,18 +200,18 @@ export default function DashboardPage() {
       {/* 2. RECHARTS VISUALIZATION GRID (4 CHARTS) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Chart 1: Inspections Trend Area Chart */}
-        <div className="p-5 rounded-2xl bg-bg-card border border-border-subtle space-y-4">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <h3 className="text-sm font-bold text-text-primary">
-                Weekly Inspection Volume & Pass Rates
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Weekly Inspection Volume
               </h3>
-              <p className="text-[11px] text-text-muted">
+              <p className="text-[11px] text-slate-500">
                 Passed boards vs flagged defects over the last 7 days
               </p>
             </div>
-            <span className="text-[10px] font-mono uppercase bg-bg-elevated text-brand-cyan px-2 py-0.5 rounded border border-border-subtle">
-              7-Day Trend
+            <span className="text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              7-Day
             </span>
           </div>
 
@@ -226,26 +220,27 @@ export default function DashboardPage() {
               <AreaChart data={INSPECTIONS_TREND_DATA}>
                 <defs>
                   <linearGradient id="areaPassed" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22D3EE" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#22D3EE" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0D9488" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#0D9488" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" opacity={0.5} />
-                <XAxis dataKey="day" stroke="#64748B" fontSize={11} />
-                <YAxis stroke="#64748B" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
+                <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
                 <RechartsTooltip
                   contentStyle={{
-                    backgroundColor: '#0F1D38',
-                    borderColor: 'rgba(34,211,238,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
                     borderRadius: '8px',
                     fontSize: '12px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                   }}
                 />
                 <Area
                   type="monotone"
                   dataKey="count"
                   name="Total Scans"
-                  stroke="#22D3EE"
+                  stroke="#0D9488"
                   fillOpacity={1}
                   fill="url(#areaPassed)"
                   strokeWidth={2}
@@ -254,9 +249,9 @@ export default function DashboardPage() {
                   type="monotone"
                   dataKey="flagged"
                   name="Flagged Defects"
-                  stroke="#F87171"
+                  stroke="#DC2626"
                   fillOpacity={0}
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -264,18 +259,18 @@ export default function DashboardPage() {
         </div>
 
         {/* Chart 2: Category Distribution Donut */}
-        <div className="p-5 rounded-2xl bg-bg-card border border-border-subtle space-y-4">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <h3 className="text-sm font-bold text-text-primary">
-                Component Category Distribution
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Component Class Breakdown
               </h3>
-              <p className="text-[11px] text-text-muted">
-                Breakdown of localized electronic component types
+              <p className="text-[11px] text-slate-500">
+                Distribution of localized hardware packages
               </p>
             </div>
-            <span className="text-[10px] font-mono uppercase bg-bg-elevated text-emerald-400 px-2 py-0.5 rounded border border-border-subtle">
-              Class Share
+            <span className="text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              Classes
             </span>
           </div>
 
@@ -287,8 +282,8 @@ export default function DashboardPage() {
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
-                  outerRadius={95}
-                  paddingAngle={4}
+                  outerRadius={90}
+                  paddingAngle={3}
                   dataKey="value"
                 >
                   {CATEGORY_DISTRIBUTION.map((entry, index) => (
@@ -297,8 +292,8 @@ export default function DashboardPage() {
                 </Pie>
                 <RechartsTooltip
                   contentStyle={{
-                    backgroundColor: '#0F1D38',
-                    borderColor: 'rgba(34,211,238,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
@@ -307,7 +302,7 @@ export default function DashboardPage() {
             </ResponsiveContainer>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] font-mono text-text-secondary">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-slate-600 dark:text-slate-400">
             {CATEGORY_DISTRIBUTION.map((item, idx) => (
               <div key={idx} className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
@@ -318,17 +313,17 @@ export default function DashboardPage() {
         </div>
 
         {/* Chart 3: Defect Severity Breakdown */}
-        <div className="p-5 rounded-2xl bg-bg-card border border-border-subtle space-y-4">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <h3 className="text-sm font-bold text-text-primary">
-                IPC-A-610 Defect Severity Distribution
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Defect Severity Frequency
               </h3>
-              <p className="text-[11px] text-text-muted">
+              <p className="text-[11px] text-slate-500">
                 Classification of active soldering and polarity anomalies
               </p>
             </div>
-            <span className="text-[10px] font-mono uppercase bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">
+            <span className="text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
               Severity
             </span>
           </div>
@@ -336,18 +331,18 @@ export default function DashboardPage() {
           <div className="h-60 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={DEFECT_SEVERITY_BREAKDOWN}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" opacity={0.5} />
-                <XAxis dataKey="severity" stroke="#64748B" fontSize={11} />
-                <YAxis stroke="#64748B" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
+                <XAxis dataKey="severity" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
                 <RechartsTooltip
                   contentStyle={{
-                    backgroundColor: '#0F1D38',
-                    borderColor: 'rgba(239,68,68,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="count" name="Defects Found" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="count" name="Defects Found" radius={[4, 4, 0, 0]}>
                   {DEFECT_SEVERITY_BREAKDOWN.map((entry, index) => (
                     <Cell key={`bar-${index}`} fill={entry.fill} />
                   ))}
@@ -358,49 +353,48 @@ export default function DashboardPage() {
         </div>
 
         {/* Chart 4: Confidence Histogram */}
-        <div className="p-5 rounded-2xl bg-bg-card border border-border-subtle space-y-4">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <h3 className="text-sm font-bold text-text-primary">
-                Detection Confidence Histogram
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Confidence Distribution
               </h3>
-              <p className="text-[11px] text-text-muted">
-                Confidence bracket frequency across 841 evaluated component nodes
+              <p className="text-[11px] text-slate-500">
+                Confidence bracket frequency across evaluated component nodes
               </p>
             </div>
-            <span className="text-[10px] font-mono uppercase bg-bg-elevated text-cyan-300 px-2 py-0.5 rounded border border-border-subtle">
-              Histogram
+            <span className="text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              Confidence
             </span>
           </div>
 
           <div className="h-60 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={CONFIDENCE_HISTOGRAM}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" opacity={0.5} />
-                <XAxis dataKey="bracket" stroke="#64748B" fontSize={10} />
-                <YAxis stroke="#64748B" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
+                <XAxis dataKey="bracket" stroke="#94A3B8" fontSize={10} tickLine={false} />
+                <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
                 <RechartsTooltip
                   contentStyle={{
-                    backgroundColor: '#0F1D38',
-                    borderColor: 'rgba(34,211,238,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E2E8F0',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="items" name="Detections" fill="#22D3EE" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="items" name="Detections" fill="#0D9488" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* 3. QUICK ACTIONS & SYSTEM HEALTH ROW */}
+      {/* 3. QUICK ACTIONS & TELEMETRY ROW */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Quick Actions (8 cols) */}
-        <div className="lg:col-span-8 p-6 rounded-3xl bg-bg-card border border-border-subtle space-y-4">
-          <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
-            <Zap className="w-4 h-4 text-brand-cyan" />
-            <span>Inspection Quick Actions</span>
+        <div className="lg:col-span-8 p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Quick Actions
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -410,17 +404,17 @@ export default function DashboardPage() {
                 setActiveBoard('arduino-uno-r3-standard');
                 router.push('/studio');
               }}
-              className="p-4 rounded-xl bg-bg-elevated/70 hover:bg-bg-elevated border border-border-subtle hover:border-cyan-500/40 text-left transition-all flex items-start gap-3 group"
+              className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left transition-colors flex items-start gap-3"
             >
-              <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 group-hover:scale-105 transition-transform">
-                <ScanEye className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+                <ScanEye className="w-4 h-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-text-primary group-hover:text-cyan-300">
+              <div className="space-y-0.5">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100">
                   New Inspection Studio
                 </div>
-                <div className="text-[11px] text-text-muted">
-                  Launch interactive AR overlay canvas with reference board.
+                <div className="text-[11px] text-slate-500">
+                  Launch interactive canvas with reference Uno R3 board.
                 </div>
               </div>
             </button>
@@ -433,20 +427,20 @@ export default function DashboardPage() {
                 addToast({
                   type: 'info',
                   title: 'Camera Ingestion',
-                  message: 'Opening studio in live camera video stream mode.',
+                  message: 'Camera Ingestion mode enabled',
                 });
               }}
-              className="p-4 rounded-xl bg-bg-elevated/70 hover:bg-bg-elevated border border-border-subtle hover:border-cyan-500/40 text-left transition-all flex items-start gap-3 group"
+              className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left transition-colors flex items-start gap-3"
             >
-              <div className="p-2 rounded-lg bg-teal-500/20 text-teal-300 group-hover:scale-105 transition-transform">
-                <Camera className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+                <Camera className="w-4 h-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-text-primary group-hover:text-teal-300">
+              <div className="space-y-0.5">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100">
                   Scan with Camera
                 </div>
-                <div className="text-[11px] text-text-muted">
-                  Request webcam access to inspect physical hardware live.
+                <div className="text-[11px] text-slate-500">
+                  Capture physical hardware via browser webcam feed.
                 </div>
               </div>
             </button>
@@ -458,21 +452,21 @@ export default function DashboardPage() {
                 router.push('/studio');
                 addToast({
                   type: 'warning',
-                  title: 'Defect Sample Loaded',
-                  message: 'Arduino Uno Variant B loaded with 5 IPC defects.',
+                  title: 'Defect Sample',
+                  message: 'Loaded Arduino Uno Defect Variant B',
                 });
               }}
-              className="p-4 rounded-xl bg-bg-elevated/70 hover:bg-bg-elevated border border-border-subtle hover:border-rose-500/40 text-left transition-all flex items-start gap-3 group"
+              className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left transition-colors flex items-start gap-3"
             >
-              <div className="p-2 rounded-lg bg-rose-500/20 text-rose-300 group-hover:scale-105 transition-transform">
-                <AlertTriangle className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-text-primary group-hover:text-rose-300">
+              <div className="space-y-0.5">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100">
                   Inspect Defect Variant B
                 </div>
-                <div className="text-[11px] text-text-muted">
-                  Solder bridge short, reversed cap, and bent pin anomalies.
+                <div className="text-[11px] text-slate-500">
+                  Solder bridge short, reversed capacitor, and damaged pads.
                 </div>
               </div>
             </button>
@@ -480,76 +474,76 @@ export default function DashboardPage() {
             {/* Action 4 */}
             <button
               onClick={() => router.push('/assistant')}
-              className="p-4 rounded-xl bg-bg-elevated/70 hover:bg-bg-elevated border border-border-subtle hover:border-indigo-500/40 text-left transition-all flex items-start gap-3 group"
+              className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left transition-colors flex items-start gap-3"
             >
-              <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-300 group-hover:scale-105 transition-transform">
-                <Bot className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-text-primary group-hover:text-indigo-300">
-                  Ask AI Hardware Copilot
+              <div className="space-y-0.5">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100">
+                  Hardware AI Copilot
                 </div>
-                <div className="text-[11px] text-text-muted">
-                  Conversational assistant with localized pinout constraints.
+                <div className="text-[11px] text-slate-500">
+                  Circuit reasoning and datasheet query assistance.
                 </div>
               </div>
             </button>
           </div>
         </div>
 
-        {/* Right: System Health Telemetry (4 cols) */}
-        <div className="lg:col-span-4 p-6 rounded-3xl bg-bg-card border border-border-subtle flex flex-col justify-between gap-4">
+        {/* Right: Telemetry (4 cols) */}
+        <div className="lg:col-span-4 p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                <Activity className="w-4 h-4 text-emerald-400" />
-                <span>System Health Telemetry</span>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <span>System Runtime Status</span>
               </h3>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-teal-600" />
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-bg-elevated/60 border border-border-subtle flex justify-between items-center">
-                <span className="text-text-muted">Edge AI Runtime:</span>
-                <span className="font-mono text-emerald-400 font-bold">WASM / WebGPU</span>
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <span className="text-slate-500">Runtime:</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200 font-medium">WASM / WebGPU</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-bg-elevated/60 border border-border-subtle flex justify-between items-center">
-                <span className="text-text-muted">Detector Adapter:</span>
-                <span className="font-mono text-amber-300 font-semibold">Simulated-v1.4</span>
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <span className="text-slate-500">Inference Adapter:</span>
+                <span className="font-mono text-amber-700 dark:text-amber-400 font-medium">Simulated-v1.4</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-bg-elevated/60 border border-border-subtle flex justify-between items-center">
-                <span className="text-text-muted">Inference Latency:</span>
-                <span className="font-mono text-text-primary">210 ms (Deterministic)</span>
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <span className="text-slate-500">Inference Latency:</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">210 ms</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-bg-elevated/60 border border-border-subtle flex justify-between items-center">
-                <span className="text-text-muted">Display Framerate:</span>
-                <span className="font-mono text-emerald-400">60.0 FPS</span>
+              <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <span className="text-slate-500">Render Framerate:</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">60.0 FPS</span>
               </div>
             </div>
           </div>
 
-          <div className="text-[11px] font-mono text-text-muted pt-2 border-t border-border-subtle flex justify-between">
+          <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between">
             <span>Memory: 48.2 MB heap</span>
-            <span className="text-brand-cyan">100% Offline</span>
+            <span className="text-teal-600 dark:text-teal-400 font-medium">100% Client-Side</span>
           </div>
         </div>
       </div>
 
-      {/* 4. RECENT INSPECTION ACTIVITY TIMELINE */}
-      <div className="space-y-4">
+      {/* 4. RECENT ACTIVITY TIMELINE */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-brand-cyan" />
-            <h2 className="text-lg font-display font-bold text-text-primary">
-              Recent Inspection Log Timeline
+            <History className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              Recent Inspection Logs
             </h2>
           </div>
-          <Link href="/history" className="text-xs font-mono text-brand-cyan hover:underline">
+          <Link href="/history" className="text-xs text-teal-600 dark:text-teal-400 hover:underline">
             View all logs →
           </Link>
         </div>
 
-        <div className="divide-y divide-border-subtle rounded-2xl bg-bg-card border border-border-subtle overflow-hidden">
+        <div className="divide-y divide-slate-200 dark:divide-slate-800 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
           {INSPECTION_HISTORY.slice(0, 5).map((item) => (
             <div
               key={item.id}
@@ -557,44 +551,44 @@ export default function DashboardPage() {
                 setActiveBoard(item.boardVariant.includes('Variant B') ? 'arduino-uno-r3-variant-b' : 'arduino-uno-r3-standard');
                 router.push('/studio');
               }}
-              className="p-4 hover:bg-bg-elevated/60 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer"
+              className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer"
             >
               <div className="flex items-start sm:items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-bg-elevated border border-border-subtle flex items-center justify-center font-mono text-xs font-bold text-brand-cyan shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center font-mono text-xs font-semibold text-teal-600 dark:text-teal-400 shrink-0">
                   PCB
                 </div>
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-text-primary">{item.boardName}</span>
-                    <span className="text-[10px] font-mono text-text-muted bg-bg-base px-2 py-0.5 rounded border border-border-subtle">
+                    <span className="text-xs font-medium text-slate-900 dark:text-slate-100">{item.boardName}</span>
+                    <span className="text-[10px] font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                       {item.boardVariant}
                     </span>
                   </div>
-                  <p className="text-xs text-text-secondary line-clamp-1">{item.summary}</p>
+                  <p className="text-xs text-slate-500 line-clamp-1">{item.summary}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-xs font-mono shrink-0 pl-12 sm:pl-0">
-                <span className="text-text-muted">{item.inspectionDate.split(' ')[0]}</span>
+              <div className="flex items-center gap-4 text-xs font-mono shrink-0 pl-11 sm:pl-0">
+                <span className="text-slate-400">{item.inspectionDate.split(' ')[0]}</span>
                 <span
-                  className={`px-2 py-0.5 rounded font-bold ${
+                  className={`px-2 py-0.5 rounded font-medium text-xs ${
                     item.healthScore >= 90
-                      ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
-                      : 'bg-rose-950/70 text-rose-300 border border-rose-500/30'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                      : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
                   }`}
                 >
                   Score: {item.healthScore.toFixed(0)}%
                 </span>
-                <ArrowRight className="w-4 h-4 text-text-muted" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 5. FOOTER DISCLAIMER */}
-      <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-300/90 text-xs flex items-center gap-3">
-        <Info className="w-4 h-4 shrink-0 text-amber-400" />
+      {/* 5. NOTICE */}
+      <div className="p-3.5 rounded-lg bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2.5">
+        <Info className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
         <span>
           <strong>Dashboard Simulation Notice:</strong> Inspection metrics, pass rates, and defect distribution charts
           are generated by the VisionGuard demonstration engine to showcase analytical capabilities without requiring live hardware feeds.

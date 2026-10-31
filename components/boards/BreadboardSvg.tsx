@@ -24,7 +24,7 @@ export const BreadboardSvg: React.FC<BreadboardSvgProps> = ({
     <div className={`relative w-full aspect-[1000/600] select-none ${className}`}>
       <svg
         viewBox="0 0 1000 600"
-        className="w-full h-full drop-shadow-2xl"
+        className="w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
@@ -131,12 +131,12 @@ export const BreadboardSvg: React.FC<BreadboardSvgProps> = ({
                 width={w}
                 height={h}
                 rx="6"
-                fill={isSelected ? 'rgba(34, 211, 238, 0.2)' : 'transparent'}
-                stroke={isSelected ? '#22D3EE' : 'rgba(34, 211, 238, 0.6)'}
-                strokeWidth={isSelected ? '3' : '2'}
+                fill={isSelected ? 'rgba(13, 148, 136, 0.1)' : 'transparent'}
+                stroke="#0D9488"
+                strokeWidth={isSelected ? '2.5' : '1.5'}
                 strokeDasharray="4 2"
                 onClick={() => onSelectDetection?.(d)}
-                className="cursor-pointer"
+                className="cursor-pointer transition-colors duration-150"
               />
             );
           })}

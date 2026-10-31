@@ -4,11 +4,6 @@ import React, { useState } from 'react';
 import {
   ScanEye,
   Info,
-  Layers,
-  Sparkles,
-  AlertTriangle,
-  RotateCcw,
-  SlidersHorizontal,
 } from 'lucide-react';
 import { useVisionStore } from '@/store/useVisionStore';
 import { StudioLeftPanel } from '@/components/studio/StudioLeftPanel';
@@ -21,15 +16,15 @@ export default function StudioPage() {
   const [showDismissibleBanner, setShowDismissibleBanner] = useState(true);
 
   return (
-    <div className="flex flex-col h-full -mx-4 -my-6 md:-mx-8 md:-my-8 select-none overflow-hidden">
+    <div className="flex flex-col h-full -mx-4 -my-6 md:-mx-8 md:-my-8 select-none overflow-hidden bg-slate-50 dark:bg-slate-900">
       {/* Studio Top Control Strip */}
-      <div className="h-14 bg-bg-base/90 backdrop-blur-md border-b border-border-subtle px-4 md:px-6 flex items-center justify-between gap-4 shrink-0 z-20">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-brand-cyan shrink-0">
-            <ScanEye className="w-4 h-4 animate-pulse-subtle" />
+      <div className="h-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 md:px-6 flex items-center justify-between gap-4 shrink-0 z-20">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-7 h-7 rounded-md bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400 shrink-0">
+            <ScanEye className="w-4 h-4" />
           </div>
           <div className="flex items-center gap-2 truncate">
-            <h1 className="font-display font-bold text-sm text-text-primary tracking-wide truncate">
+            <h1 className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate">
               Live Inspection Studio
             </h1>
             <ProvenanceBadge source="simulated" />
@@ -37,7 +32,7 @@ export default function StudioPage() {
         </div>
 
         {/* Board Switcher Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1">
           {boards.map((b) => (
             <button
               key={b.id}
@@ -49,13 +44,13 @@ export default function StudioPage() {
                   message: `Loaded ${b.name}`,
                 });
               }}
-              className={`px-3 py-1 rounded-xl text-xs font-mono transition-all shrink-0 border ${
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors shrink-0 border ${
                 b.id === activeBoard.id
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 shadow-cyan-glow font-bold'
-                  : 'bg-bg-elevated/70 text-text-secondary border-border-subtle hover:text-text-primary hover:border-cyan-500/30'
+                  ? 'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border-teal-600 dark:border-teal-500'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300'
               }`}
             >
-              {b.variant === 'defect_demo' ? '⚠️ Uno (Defect Variant B)' : b.name.split(' (')[0]}
+              {b.variant === 'defect_demo' ? '⚠ Uno (Defect Variant B)' : b.name.split(' (')[0]}
             </button>
           ))}
         </div>
@@ -63,17 +58,17 @@ export default function StudioPage() {
 
       {/* Dismissible Simulation Disclaimer Banner */}
       {showDismissibleBanner && (
-        <div className="bg-amber-950/40 border-b border-amber-500/30 px-4 py-2 text-xs font-mono text-amber-200 flex items-center justify-between shrink-0 z-10 animate-in slide-in-from-top-2 duration-150">
+        <div className="bg-amber-50 dark:bg-amber-950/20 border-b border-amber-200/80 dark:border-amber-800/40 px-4 py-1.5 text-xs text-amber-800 dark:text-amber-300 flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-2 truncate">
-            <Info className="w-4 h-4 text-amber-400 shrink-0" />
+            <Info className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
             <span className="truncate">
-              <strong>Simulated Inspection Engine:</strong> Component boxes & defects are rendered by VisionGuard&apos;s
+              <strong>Simulated Inspection Engine:</strong> Component boxes and defects are rendered by VisionGuard&apos;s
               offline model. Connect a live ONNX/YOLO adapter in <code>lib/ai/</code> to evaluate live weights.
             </span>
           </div>
           <button
             onClick={() => setShowDismissibleBanner(false)}
-            className="text-amber-400 hover:text-amber-200 underline text-[11px] ml-4 shrink-0"
+            className="text-amber-700 hover:text-amber-900 dark:hover:text-amber-100 font-medium text-[11px] ml-4 shrink-0"
           >
             Dismiss
           </button>
@@ -82,15 +77,15 @@ export default function StudioPage() {
 
       {/* Main 3-Column Studio Layout */}
       <div className="flex-1 flex flex-col lg:flex-row min-w-0 h-full overflow-hidden relative">
-        {/* Left Panel: Input & Controls (~320px) */}
+        {/* Left Panel: Input & Controls (~300px) */}
         <StudioLeftPanel />
 
         {/* Center: Main Canvas (Dominant Area) */}
-        <div className="flex-1 flex flex-col min-w-0 h-full p-2 sm:p-4 overflow-hidden relative">
+        <div className="flex-1 flex flex-col min-w-0 h-full p-2 sm:p-3 overflow-hidden relative bg-slate-100 dark:bg-slate-950">
           <StudioCanvas />
         </div>
 
-        {/* Right Panel: Detections & Details (~380px) */}
+        {/* Right Panel: Detections & Details (~360px) */}
         <StudioRightPanel />
       </div>
     </div>

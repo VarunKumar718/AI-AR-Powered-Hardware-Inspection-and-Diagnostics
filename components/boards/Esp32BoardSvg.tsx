@@ -172,9 +172,9 @@ export const Esp32BoardSvg: React.FC<Esp32BoardSvgProps> = ({
                   width={w}
                   height={h}
                   rx="4"
-                  fill={isSelected ? 'rgba(34, 211, 238, 0.15)' : 'transparent'}
-                  stroke={isSelected ? '#22D3EE' : 'rgba(34, 211, 238, 0.5)'}
-                  strokeWidth={isSelected ? '3' : '1.5'}
+                  fill={isSelected ? 'rgba(13, 148, 136, 0.1)' : 'transparent'}
+                  stroke="#0D9488"
+                  strokeWidth={isSelected ? '2.5' : '1.5'}
                   strokeDasharray={isSelected ? 'none' : '4 2'}
                 />
               </g>
